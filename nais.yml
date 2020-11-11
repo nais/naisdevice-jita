@@ -40,3 +40,9 @@ spec:
   {{/each}}
   envFrom:
     - secret: naisdevice-jita
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_11
+        databases:
+          - name: jita
+            envVarPrefix: DB
