@@ -1,0 +1,9 @@
+parameters:
+  level: max
+  paths:
+    - public
+    - src
+    - tests
+  ignoreErrors:
+    - message: '#Unable to resolve the template type T in call to method static method#'
+      path: public/index.php

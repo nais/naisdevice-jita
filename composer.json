@@ -1,0 +1,68 @@
+{
+  "name": "nais/naisdevice-jita",
+  "description": "Just in time access to sensitive gateways",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Christer Edvartsen",
+      "email": "christer.edvartsen@nav.no"
+    },
+    {
+      "name": "Torbjørn Hallenberg",
+      "email": "torbjorn.hallenberg@nav.no"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Naisdevice\\Jita\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Naisdevice\\Jita\\": "tests/"
+    }
+  },
+  "require": {
+    "php": "^7.4",
+    "ext-pdo": "*",
+    "doctrine/dbal": "^2.11",
+    "navikt/aad-api-client": "^0.9.0",
+    "onelogin/php-saml": "^3.4",
+    "php-di/slim-bridge": "^3.0",
+    "slim/flash": "^0.4.0",
+    "slim/psr7": "^1.1",
+    "slim/slim": "^4.5",
+    "slim/twig-view": "^3.1",
+    "tuupola/slim-basic-auth": "^3.3"
+  },
+  "require-dev": {
+    "phpstan/extension-installer": "^1.0",
+    "phpstan/phpstan": "^0.12",
+    "phpstan/phpstan-phpunit": "^0.12",
+    "phpunit/phpunit": "^9.2",
+    "psalm/plugin-phpunit": "^0.13",
+    "vimeo/psalm": "^4.1"
+  },
+  "scripts": {
+    "lint": "for file in `git ls-files '*.php'`; do php -l $file; done",
+    "test": "@phpunit",
+    "test:coverage": "@phpunit:coverage",
+    "phpunit": "vendor/bin/phpunit",
+    "phpunit:coverage": "vendor/bin/phpunit --coverage-html build/coverage --coverage-text",
+    "sa": [
+      "@phpstan",
+      "@psalm"
+    ],
+    "phpstan": "vendor/bin/phpstan analyse",
+    "psalm": "vendor/bin/psalm",
+    "ci": [
+      "@lint",
+      "@test",
+      "@sa"
+    ],
+    "start": "DEBUG=1 php -S localhost:8080 -t public/"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
