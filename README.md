@@ -1,3 +1,3 @@
-# naisdevice Privileged Identity Management
+# naisdevice Jita
 
-Simple web application that enables users to request access to sensitive gateways.
+Web application that enables Just in time access to sensitive gateways.
