@@ -1,0 +1,123 @@
+<?php declare(strict_types=1);
+namespace Naisdevice\Jita;
+
+use Naisdevice\Jita\Session\User;
+use RuntimeException;
+
+class Session {
+    private int $cookieLifetime;
+
+    /**
+     * Class constructor
+     *
+     * @param int $cookieLifetime Lifetime of the session cookie, in seconds
+     */
+    public function __construct(int $cookieLifetime = 3600) {
+        $this->cookieLifetime = $cookieLifetime;
+    }
+
+    /**
+     * Start the session
+     *
+     * @codeCoverageIgnore
+     * @return self
+     */
+    public function start() : self {
+        session_start([
+            'cookie_lifetime' => $this->cookieLifetime,
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Set a user object
+     *
+     * @param User $user
+     * @throws RuntimeException
+     * @return void
+     */
+    public function setUser(User $user) : void {
+        $_SESSION['user'] = $user;
+    }
+
+    /**
+     * Get the user instace
+     *
+     * @return ?User
+     */
+    public function getUser() : ?User {
+        $user = $_SESSION['user'] ?? null;
+
+        if (null === $user || !$user instanceof User) {
+            $_SESSION['user'] = null;
+            return null;
+        }
+
+        return $user;
+    }
+
+    /**
+     * Set the SAML request ID
+     *
+     * @param string $id
+     * @return void
+     */
+    public function setSamlRequestId(string $id) : void {
+        $_SESSION['samlRequestId'] = $id;
+    }
+
+    /**
+     * Get the SAML request ID
+     *
+     * @return ?string
+     */
+    public function getSamlRequestId() : ?string {
+        return array_key_exists('samlRequestId', $_SESSION) ? (string) $_SESSION['samlRequestId'] : null;
+    }
+
+    /**
+     * Set the gateway
+     *
+     * @param ?string $gateway
+     * @return void
+     */
+    public function setGateway(?string $gateway = null) : void {
+        $_SESSION['gateway'] = $gateway;
+    }
+
+    /**
+     * Get the gateway
+     *
+     * @return ?string
+     */
+    public function getGateway() : ?string {
+        return array_key_exists('gateway', $_SESSION) ? (string) $_SESSION['gateway'] : null;
+    }
+
+    /**
+     * Check if a user exists in the session
+     *
+     * @return bool
+     */
+    public function hasUser() : bool {
+        return array_key_exists('user', $_SESSION) && $_SESSION['user'] instanceof User;
+    }
+
+    /**
+     * Destroy the current session
+     *
+     * @codeCoverageIgnore
+     * @return self
+     */
+    public function destroy() : self {
+        unset($_SESSION);
+        setcookie(
+            session_name(),
+            '',
+            time() - 42000,
+        );
+
+        return $this;
+    }
+}

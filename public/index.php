@@ -42,10 +42,10 @@ define('DEBUG', '1' === env('DEBUG'));
 
 // Create and populate container
 $container = new Container();
-$container->set(Connection::class, fn() : Connection => DriverManager::getConnection([
+$container->set(Connection::class, fn() => DriverManager::getConnection([
     'url' => env('DB_DSN'),
 ]));
-$container->set(Twig::class, function() : Twig {
+$container->set(Twig::class, function() {
     $twig = Twig::create(__DIR__ . '/../templates', [
         'debug' => DEBUG,
     ]);
@@ -59,7 +59,8 @@ $container->set(Twig::class, function() : Twig {
 $container->set(Session::class, (new Session())->start());
 $container->set(FlashMessages::class, new FlashMessages()); // Must be initialized after the session entry on the line above
 $container->set(SamlResponseValidator::class, fn() => new SamlResponseValidator(env('SAML_CERT')));
-$container->set(IndexController::class, function(ContainerInterface $c) : IndexController {
+$container->set(Gateways::class, fn() => new Gateways());
+$container->set(IndexController::class, function(ContainerInterface $c) {
     /** @var Twig */
     $twig = $c->get(Twig::class);
 
@@ -72,9 +73,12 @@ $container->set(IndexController::class, function(ContainerInterface $c) : IndexC
     /** @var FlashMessages */
     $flashMessages = $c->get(FlashMessages::class);
 
-    return new IndexController($twig, $session, $connection, $flashMessages, env('LOGIN_URL'), env('ISSUER_ENTITY_ID'));
+    /** @var Gateways */
+    $gateways = $c->get(Gateways::class);
+
+    return new IndexController($twig, $session, $connection, $flashMessages, env('LOGIN_URL'), env('ISSUER_ENTITY_ID'), $gateways);
 });
-$container->set(SamlController::class, function(ContainerInterface $c) : SamlController {
+$container->set(SamlController::class, function(ContainerInterface $c) {
     /** @var Session */
     $session = $c->get(Session::class);
 
@@ -83,7 +87,7 @@ $container->set(SamlController::class, function(ContainerInterface $c) : SamlCon
 
     return new SamlController($session, $validator, env('LOGOUT_URL'));
 });
-$container->set(ApiController::class, function(ContainerInterface $c) : ApiController {
+$container->set(ApiController::class, function(ContainerInterface $c) {
     /** @var Connection */
     $connection = $c->get(Connection::class);
 
