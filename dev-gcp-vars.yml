@@ -1,0 +1,4 @@
+env:
+  DEBUG: 1
+ingresses:
+  - https://naisdevice-jita.dev-gcp.nais.io
