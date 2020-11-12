@@ -42,7 +42,8 @@ spec:
     - secret: naisdevice-jita
   gcp:
     sqlInstances:
-      - type: POSTGRES_12
+      - name: naisdevice-jita-db
+        type: POSTGRES_12
         cascadingDelete: true
         databases:
           - name: jita
