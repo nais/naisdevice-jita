@@ -14,12 +14,6 @@ RUN apt-get update && \
     apt-get install -y libpq-dev && \
     docker-php-ext-install pdo_pgsql
 RUN a2enmod rewrite
-RUN echo "export ISSUER_ENTITY_ID" >> /etc/apache2/envvars && \
-    echo "export LOGIN_URL" >> /etc/apache2/envvars && \
-    echo "export LOGOUT_URL" >> /etc/apache2/envvars && \
-    echo "export SAML_CERT" >> /etc/apache2/envvars && \
-    echo "export API_PASSWORD" >> /etc/apache2/envvars && \
-    echo "export DB_DSN" >> /etc/apache2/envvars
 COPY --from=build /app/vendor/ /var/www/vendor/
 COPY templates/ /var/www/templates/
 COPY src/ /var/www/src/
