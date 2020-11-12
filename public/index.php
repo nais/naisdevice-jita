@@ -101,6 +101,7 @@ $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 $app->add(new HttpBasicAuthentication([
     'path'   => '/api',
+    'realm'  => 'API',
     'secure' => false,
     'users'  => [
         'naisdevice-jita' => env('API_PASSWORD'),
