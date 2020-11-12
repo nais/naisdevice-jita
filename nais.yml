@@ -43,6 +43,7 @@ spec:
   gcp:
     sqlInstances:
       - type: POSTGRES_12
+        cascadingDelete: true
         databases:
           - name: jita
             envVarPrefix: DB
