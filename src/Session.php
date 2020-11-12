@@ -10,6 +10,7 @@ class Session {
     /**
      * Class constructor
      *
+     * @codeCoverageIgnore
      * @param int $cookieLifetime Lifetime of the session cookie, in seconds
      */
     public function __construct(int $cookieLifetime = 3600) {
@@ -55,6 +56,25 @@ class Session {
         }
 
         return $user;
+    }
+
+    /**
+     * Set a token used to validate a POST
+     *
+     * @param string $token
+     * @return void
+     */
+    public function setPostToken(string $token) : void {
+        $_SESSION['postToken'] = $token;
+    }
+
+    /**
+     * Get a post token
+     *
+     * @return ?string
+     */
+    public function getPostToken() : ?string {
+        return array_key_exists('postToken', $_SESSION) ? (string) $_SESSION['postToken'] : null;
     }
 
     /**
