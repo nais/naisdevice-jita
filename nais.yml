@@ -42,7 +42,7 @@ spec:
     - secret: naisdevice-jita
   gcp:
     sqlInstances:
-      - type: POSTGRES_13
+      - type: POSTGRES_12
         databases:
           - name: jita
             envVarPrefix: DB
