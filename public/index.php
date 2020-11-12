@@ -108,6 +108,7 @@ $app->add(new HttpBasicAuthentication([
     ],
 ]));
 $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
+$app->add(new Middleware\RemoveDuplicateAuthHeader());
 $app->add(new Middleware\EnvironmentValidation(getenv()));
 $app
     ->addErrorMiddleware(DEBUG, true, true)
