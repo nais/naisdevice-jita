@@ -61,7 +61,11 @@ class IndexController {
                 ));
         }
 
+        $postToken = uniqid('', true);
+        $this->session->setPostToken($postToken);
+
         return $this->view->render($response, 'index.html', [
+            'postToken'       => $postToken,
             'user'            => $user,
             'flashMessages'   => $this->flashMessages->getMessage(FlashMessage::class),
             'selectedGateway' => $gateway,
@@ -79,12 +83,13 @@ class IndexController {
     }
 
     public function createRequest(Request $request, Response $response) : Response {
-        $user     = $this->session->getUser();
-        /** @var array{gateway?:string,reason?:string,duration?:int} */
-        $params   = $request->getParsedBody() ?: [];
-        $gateway  = array_key_exists('gateway', $params) ? trim((string) $params['gateway']) : '';
-        $reason   = array_key_exists('reason', $params) ? trim((string) $params['reason']) : '';
-        $duration = array_key_exists('duration', $params) ? (int) $params['duration'] : 0;
+        $user      = $this->session->getUser();
+        /** @var array{postToken?:string,gateway?:string,reason?:string,duration?:int} */
+        $params    = $request->getParsedBody() ?: [];
+        $postToken = array_key_exists('postToken', $params) ? trim((string) $params['postToken']) : '';
+        $gateway   = array_key_exists('gateway', $params) ? trim((string) $params['gateway']) : '';
+        $reason    = array_key_exists('reason', $params) ? trim((string) $params['reason']) : '';
+        $duration  = array_key_exists('duration', $params) ? (int) $params['duration'] : 0;
 
         if (null === $user) {
             $this->session->destroy();
@@ -94,6 +99,14 @@ class IndexController {
         }
 
         $error = false;
+
+        if ($postToken !== $this->session->getPostToken()) {
+            $this->flashMessages->addMessage(
+                FlashMessage::class,
+                new FlashMessage('Incorrect POST token.', true),
+            );
+            $error = true;
+        }
 
         if ('' === $reason) {
             $this->flashMessages->addMessage(

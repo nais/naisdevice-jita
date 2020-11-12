@@ -11,6 +11,8 @@
             {% endfor %}
 
             <form method="post" action="/">
+                <input type="hidden" name="postToken" value="{{ postToken }}">
+
                 <div class="form-group">
                     <label for="gateway">Gateway</label>
                     <select class="form-control" id="gateway" name="gateway">
