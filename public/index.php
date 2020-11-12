@@ -43,7 +43,7 @@ define('DEBUG', '1' === env('DEBUG'));
 // Create and populate container
 $container = new Container();
 $container->set(Connection::class, fn() => DriverManager::getConnection([
-    'url' => env('DB_DSN'),
+    'url' => env('DB_URL'),
 ]));
 $container->set(Twig::class, function() {
     $twig = Twig::create(__DIR__ . '/../templates', [

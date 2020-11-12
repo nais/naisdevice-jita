@@ -38,7 +38,7 @@ class EnvironmentValidation {
             'LOGOUT_URL',
             'SAML_CERT',
             'API_PASSWORD',
-            'DB_DSN',
+            'DB_URL',
         ] as $required) {
             if (empty($this->env[$required])) {
                 $missing[] = $required;
