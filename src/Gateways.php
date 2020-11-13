@@ -9,10 +9,19 @@ class Gateways {
      * @var array<string,string>
      */
     private array $gateways = [
-        'gw-1' => 'gw-1',
-        'gw-2' => 'gw-2',
-        'gw-3' => 'gw-3',
-        'gw-4' => 'gw-4',
+        'nais-device-gw-k8s-labs'  => 'nais-device-gw-k8s-labs',
+        'nais-device-gw-k8s-dev'   => 'nais-device-gw-k8s-dev',
+        'nais-device-gw-k8s-prod'  => 'nais-device-gw-k8s-prod',
+        'nais-device-gw-k8s-ci'    => 'nais-device-gw-k8s-ci',
+        'nav-utvikler'             => 'nav-utvikler',
+        'naisdevice-vdi'           => 'naisdevice-vdi',
+        'nais-device-k8s-onprem'   => 'nais-device-k8s-onprem',
+        'nais-device-k8s-kubeflow' => 'nais-device-k8s-kubeflow',
+        'naisdevice-postgres-dev'  => 'naisdevice-postgres-dev',
+        'naisdevice-gosys'         => 'naisdevice-gosys',
+        'oracle-dev'               => 'oracle-dev',
+        'kafka-prod'               => 'kafka-prod',
+        'kafka-dev'                => 'kafka-dev',
     ];
 
     /**
