@@ -12,7 +12,6 @@ RUN php composer.phar install -o --no-dev
 FROM php:7.4-apache
 RUN apt-get update && \
     apt-get install -y libpq-dev && \
-    apt-get install -y vim && \
     docker-php-ext-install pdo_pgsql
 RUN a2enmod rewrite
 COPY --from=build /app/vendor/ /var/www/vendor/
