@@ -35,7 +35,7 @@ class ApiController {
         ['gateway' => $gateway, 'userId' => $userId] = $params;
 
         $access = $this->connection->fetchAssociative(
-            'SELECT * FROM requests WHERE gateway = ? AND user_id = ? AND expires > ? LIMIT 1',
+            'SELECT id FROM requests WHERE gateway = ? AND user_id = ? AND expires > ? LIMIT 1',
             [$gateway, $userId, time()]
         );
 
