@@ -19,8 +19,12 @@ if ('' === env('DB_URL')) {
     exit(1);
 }
 
+$logger->info('Starting database migrations');
+
 (new DatabaseMigrations(
     DriverManager::getConnection(['url' => env('DB_URL')]),
     __DIR__ . '/schemas',
     $logger,
 ))->migrate();
+
+$logger->info('Finished database migrations \o/');
