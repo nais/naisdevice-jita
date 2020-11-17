@@ -55,6 +55,7 @@ class DatabaseMigrationsTest extends TestCase {
     }
 
     /**
+     * @covers ::migrate
      * @covers ::getCurrentVersion
      */
     public function testThrowsExceptionOnDatabaseError() : void {
@@ -62,10 +63,15 @@ class DatabaseMigrationsTest extends TestCase {
         $connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->willThrowException($this->createMock(Exception::class));
+            ->willThrowException(new Exception('some error'));
 
-        $this->expectExceptionObject(new RuntimeException('Database connection error, unable to run database migrations:'));
-        $this->assertSame(0, (new DatabaseMigrations($connection, __DIR__))->migrate());
+        $logger = $this->createMock(Logger::class);
+        $logger
+            ->expects($this->once())
+            ->method('alert')
+            ->with('Database connection error, unable to run database migrations: some error');
+
+        $this->assertSame(1, (new DatabaseMigrations($connection, __DIR__, $logger))->migrate());
     }
 
     /**

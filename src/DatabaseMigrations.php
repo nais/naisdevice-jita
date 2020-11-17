@@ -36,7 +36,12 @@ class DatabaseMigrations {
      * @return int
      */
     public function migrate() : int {
-        $currentVersion = $this->getCurrentVersion();
+        try {
+            $currentVersion = $this->getCurrentVersion();
+        } catch (RuntimeException $e) {
+            $this->logger->alert($e->getMessage());
+            return self::MIGRATION_ERROR;
+        }
 
         for ($version = $currentVersion; $version < count($this->migrations); $version++) {
             $migrationPath = $this->migrations[$version];
