@@ -25,8 +25,6 @@ class DatabaseMigrations {
     private array $migrations;
 
     public function __construct(Connection $connection, string $migrationsPath, Logger $logger = null) {
-        $migrationsPath = rtrim($migrationsPath, '/');
-
         $this->logger     = $logger ?: new Logger(__CLASS__);
         $this->connection = $connection;
         $this->migrations = $this->getMigrationsFilesFromPath($migrationsPath);
@@ -88,6 +86,8 @@ class DatabaseMigrations {
      * @return string[]
      */
     private function getMigrationsFilesFromPath(string $dir) : array {
+        $dir = rtrim($dir, '/');
+
         if (!is_dir($dir)) {
             throw new InvalidArgumentException(sprintf('Not a directory: %s', $dir));
         }
