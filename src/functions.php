@@ -6,6 +6,7 @@ namespace Naisdevice\Jita;
  *
  * @param string $key
  * @return string
+ * @codeCoverageIgnore
  */
 function env(string $key) : string {
     return trim((string) getenv($key));
