@@ -16,5 +16,9 @@ RUN apt-get update && \
 RUN a2enmod rewrite
 COPY --from=build /app/vendor/ /var/www/vendor/
 COPY templates/ /var/www/templates/
+COPY scripts/ /var/www/scripts/
 COPY src/ /var/www/src/
 COPY public/ /var/www/html/
+COPY entrypoint-wrapper.sh /usr/local/bin/entrypoint-wrapper
+
+ENTRYPOINT [ "entrypoint-wrapper" ]
