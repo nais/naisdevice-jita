@@ -5,7 +5,7 @@ env:
 jobs:
   test:
     name: Run unit tests and static analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
 
@@ -42,7 +42,7 @@ jobs:
 
   build:
     name: Build docker container
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: test
     steps:
       - uses: actions/checkout@v2
@@ -60,7 +60,7 @@ jobs:
     needs:
       - test
       - build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
 
