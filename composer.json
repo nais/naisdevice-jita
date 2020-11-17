@@ -15,7 +15,10 @@
   "autoload": {
     "psr-4": {
       "Naisdevice\\Jita\\": "src/"
-    }
+    },
+    "files": [
+      "src/functions.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
@@ -26,6 +29,7 @@
     "php": "^7.4",
     "ext-pdo": "*",
     "doctrine/dbal": "^2.11",
+    "monolog/monolog": "^2.1",
     "onelogin/php-saml": "^3.4",
     "php-di/slim-bridge": "^3.0",
     "slim/flash": "^0.4.0",

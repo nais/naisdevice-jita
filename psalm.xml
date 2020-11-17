@@ -9,6 +9,7 @@
 >
     <projectFiles>
         <directory name="public"/>
+        <directory name="scripts"/>
         <directory name="src"/>
         <directory name="tests"/>
         <ignoreFiles>
