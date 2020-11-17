@@ -28,16 +28,6 @@ use Twig\Extension\DebugExtension;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-/**
- * Get env var as string
- *
- * @param string $key
- * @return string
- */
-function env(string $key) : string {
-    return trim((string) getenv($key));
-}
-
 define('DEBUG', '1' === env('DEBUG'));
 
 // Create and populate container

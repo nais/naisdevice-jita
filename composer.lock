@@ -108,16 +108,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "2.12.0",
+            "version": "2.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "c6d37b4c42aaa3c3ee175f05eca68056f4185646"
+                "reference": "adce7a954a1c2f14f85e94aed90c8489af204086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/c6d37b4c42aaa3c3ee175f05eca68056f4185646",
-                "reference": "c6d37b4c42aaa3c3ee175f05eca68056f4185646",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/adce7a954a1c2f14f85e94aed90c8489af204086",
+                "reference": "adce7a954a1c2f14f85e94aed90c8489af204086",
                 "shasum": ""
             },
             "require": {
@@ -199,7 +199,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/2.12.0"
+                "source": "https://github.com/doctrine/dbal/tree/2.12.1"
             },
             "funding": [
                 {
@@ -215,7 +215,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-22T17:26:24+00:00"
+            "time": "2020-11-14T20:26:58+00:00"
         },
         {
             "name": "doctrine/event-manager",
@@ -1295,16 +1295,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "4.5.0",
+            "version": "4.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "5613cbb521081ed676d5d7eb3e44f2b80a818c24"
+                "reference": "9f6a54f70438655f8c4be63b2b442d34a0c8a142"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/5613cbb521081ed676d5d7eb3e44f2b80a818c24",
-                "reference": "5613cbb521081ed676d5d7eb3e44f2b80a818c24",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/9f6a54f70438655f8c4be63b2b442d34a0c8a142",
+                "reference": "9f6a54f70438655f8c4be63b2b442d34a0c8a142",
                 "shasum": ""
             },
             "require": {
@@ -1319,18 +1319,18 @@
                 "psr/log": "^1.1"
             },
             "require-dev": {
-                "adriansuter/php-autoload-override": "^1.0",
+                "adriansuter/php-autoload-override": "^1.2",
                 "ext-simplexml": "*",
-                "guzzlehttp/psr7": "^1.5",
+                "guzzlehttp/psr7": "^1.7",
                 "http-interop/http-factory-guzzle": "^1.0",
-                "laminas/laminas-diactoros": "^2.1",
-                "nyholm/psr7": "^1.1",
-                "nyholm/psr7-server": "^0.3.0",
-                "phpspec/prophecy": "^1.10",
-                "phpstan/phpstan": "^0.11.5",
+                "laminas/laminas-diactoros": "^2.4",
+                "nyholm/psr7": "^1.3",
+                "nyholm/psr7-server": "^1.0.0",
+                "phpspec/prophecy": "^1.12",
+                "phpstan/phpstan": "^0.12.54",
                 "phpunit/phpunit": "^8.5",
-                "slim/http": "^1.0",
-                "slim/psr7": "^1.0",
+                "slim/http": "^1.1",
+                "slim/psr7": "^1.2",
                 "squizlabs/php_codesniffer": "^3.5"
             },
             "suggest": {
@@ -1385,8 +1385,14 @@
                 "router"
             ],
             "support": {
+                "docs": "https://www.slimframework.com/docs/v4/",
+                "forum": "https://discourse.slimframework.com/",
+                "irc": "irc://irc.freenode.net:6667/slimphp",
                 "issues": "https://github.com/slimphp/Slim/issues",
-                "source": "https://github.com/slimphp/Slim/tree/4.x"
+                "rss": "https://www.slimframework.com/blog/feed.rss",
+                "slack": "https://slimphp.slack.com/",
+                "source": "https://github.com/slimphp/Slim",
+                "wiki": "https://github.com/slimphp/Slim/wiki"
             },
             "funding": [
                 {
@@ -1398,7 +1404,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-04-14T20:49:48+00:00"
+            "time": "2020-11-15T16:14:14+00:00"
         },
         {
             "name": "slim/twig-view",
@@ -2058,16 +2064,16 @@
         },
         {
             "name": "composer/package-versions-deprecated",
-            "version": "1.11.99",
+            "version": "1.11.99.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/package-versions-deprecated.git",
-                "reference": "c8c9aa8a14cc3d3bec86d0a8c3fa52ea79936855"
+                "reference": "7413f0b55a051e89485c5cb9f765fe24bb02a7b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/c8c9aa8a14cc3d3bec86d0a8c3fa52ea79936855",
-                "reference": "c8c9aa8a14cc3d3bec86d0a8c3fa52ea79936855",
+                "url": "https://api.github.com/repos/composer/package-versions-deprecated/zipball/7413f0b55a051e89485c5cb9f765fe24bb02a7b6",
+                "reference": "7413f0b55a051e89485c5cb9f765fe24bb02a7b6",
                 "shasum": ""
             },
             "require": {
@@ -2111,7 +2117,7 @@
             "description": "Composer plugin that provides efficient querying for installed package versions (no runtime IO)",
             "support": {
                 "issues": "https://github.com/composer/package-versions-deprecated/issues",
-                "source": "https://github.com/composer/package-versions-deprecated/tree/master"
+                "source": "https://github.com/composer/package-versions-deprecated/tree/1.11.99.1"
             },
             "funding": [
                 {
@@ -2127,27 +2133,27 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-08-25T05:50:16+00:00"
+            "time": "2020-11-11T10:22:58+00:00"
         },
         {
             "name": "composer/semver",
-            "version": "3.2.2",
+            "version": "3.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "4089fddb67bcf6bf860d91b979e95be303835002"
+                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/4089fddb67bcf6bf860d91b979e95be303835002",
-                "reference": "4089fddb67bcf6bf860d91b979e95be303835002",
+                "url": "https://api.github.com/repos/composer/semver/zipball/a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
+                "reference": "a02fdf930a3c1c3ed3a49b5f63859c0c20e10464",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.3.2 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "phpstan/phpstan": "^0.12.19",
+                "phpstan/phpstan": "^0.12.54",
                 "symfony/phpunit-bridge": "^4.2 || ^5"
             },
             "type": "library",
@@ -2192,7 +2198,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/semver/issues",
-                "source": "https://github.com/composer/semver/tree/3.2.2"
+                "source": "https://github.com/composer/semver/tree/3.2.4"
             },
             "funding": [
                 {
@@ -2208,20 +2214,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-14T08:51:15+00:00"
+            "time": "2020-11-13T08:59:24+00:00"
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.4.4",
+            "version": "1.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "6e076a124f7ee146f2487554a94b6a19a74887ba"
+                "reference": "f28d44c286812c714741478d968104c5e604a1d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/6e076a124f7ee146f2487554a94b6a19a74887ba",
-                "reference": "6e076a124f7ee146f2487554a94b6a19a74887ba",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/f28d44c286812c714741478d968104c5e604a1d4",
+                "reference": "f28d44c286812c714741478d968104c5e604a1d4",
                 "shasum": ""
             },
             "require": {
@@ -2255,7 +2261,7 @@
             "support": {
                 "irc": "irc://irc.freenode.org/composer",
                 "issues": "https://github.com/composer/xdebug-handler/issues",
-                "source": "https://github.com/composer/xdebug-handler/tree/1.4.4"
+                "source": "https://github.com/composer/xdebug-handler/tree/1.4.5"
             },
             "funding": [
                 {
@@ -2271,7 +2277,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-24T12:39:10+00:00"
+            "time": "2020-11-13T08:04:11+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -2482,16 +2488,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.10.1",
+            "version": "1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "969b211f9a51aa1f6c01d1d2aef56d3bd91598e5"
+                "reference": "776f831124e9c62e1a2c601ecc52e776d8bb7220"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/969b211f9a51aa1f6c01d1d2aef56d3bd91598e5",
-                "reference": "969b211f9a51aa1f6c01d1d2aef56d3bd91598e5",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/776f831124e9c62e1a2c601ecc52e776d8bb7220",
+                "reference": "776f831124e9c62e1a2c601ecc52e776d8bb7220",
                 "shasum": ""
             },
             "require": {
@@ -2528,7 +2534,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.x"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.10.2"
             },
             "funding": [
                 {
@@ -2536,7 +2542,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-06-29T13:22:24+00:00"
+            "time": "2020-11-13T09:40:50+00:00"
         },
         {
             "name": "netresearch/jsonmapper",
@@ -3085,16 +3091,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.54",
+            "version": "0.12.56",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "45c7b999a4b7dd9ac5558bdaaf23dcebbef88223"
+                "reference": "007fd5d700c41e1bb27795fae15a2383f8fa4ba1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/45c7b999a4b7dd9ac5558bdaaf23dcebbef88223",
-                "reference": "45c7b999a4b7dd9ac5558bdaaf23dcebbef88223",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/007fd5d700c41e1bb27795fae15a2383f8fa4ba1",
+                "reference": "007fd5d700c41e1bb27795fae15a2383f8fa4ba1",
                 "shasum": ""
             },
             "require": {
@@ -3125,7 +3131,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.54"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.56"
             },
             "funding": [
                 {
@@ -3141,7 +3147,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-11-05T13:36:26+00:00"
+            "time": "2020-11-16T22:59:18+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
