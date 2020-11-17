@@ -82,21 +82,7 @@ class DatabaseMigrations {
     /**
      * Returns a numerically indexed array with complete paths
      *
-     * The directory given to this method should contain SQL files, each containing a complete
-     * transaction. The files will be sorted alphabetically, and each file will map to a given
-     * version of the schema for this app. The files must use the following naming convention to be
-     * picked up:
-     *
-     * XXXX-some-name.sql
-     *
-     * where XXXX maps to a version. Examples:
-     *
-     * - 0001-initial-schema.sql
-     * - 0002-some-col-update.sql
-     *
-     * Each transaction is responsible for updating the version of the schemas after the
-     * transaction is done.
-     *
+     * @see https://github.com/nais/naisdevice-jita/blob/main/scripts/schemas/README.md
      * @param string $dir Directory including migrations SQL scripts
      * @throws InvalidArgumentException
      * @return string[]
