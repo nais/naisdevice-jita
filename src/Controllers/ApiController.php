@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace Naisdevice\Jita\Controllers;
 
+use DateTime;
+use DateTimeZone;
 use Doctrine\DBAL\Connection;
 use Psr\Http\Message\{
     ResponseInterface as Response,
@@ -15,9 +17,9 @@ class ApiController {
     }
 
     public function requests(Request $request, Response $response) : Response {
-        $response->getBody()->write((string) json_encode(['requests' => array_map(function(array $request) : array {
-            $request['created'] = (int) $request['created'];
-            $request['expires'] = (int) $request['expires'];
+        $now = new DateTime('now', new DateTimeZone('UTC'));
+        $response->getBody()->write((string) json_encode(['requests' => array_map(function(array $request) use ($now) : array {
+            $request['expired'] = new DateTime((string) $request['expires'], new DateTimeZone('UTC')) < $now;
             return $request;
         }, $this->connection->fetchAllAssociative(
             'SELECT created, gateway, user_id, expires, reason FROM requests ORDER BY id DESC',
@@ -35,8 +37,8 @@ class ApiController {
         ['gateway' => $gateway, 'userId' => $userId] = $params;
 
         $access = $this->connection->fetchAssociative(
-            'SELECT id FROM requests WHERE gateway = ? AND user_id = ? AND expires > ? LIMIT 1',
-            [$gateway, $userId, time()]
+            'SELECT id FROM requests WHERE gateway = ? AND user_id = ? AND expires > NOW() LIMIT 1',
+            [$gateway, $userId]
         );
 
         $response->getBody()->write((string) json_encode(['access' => false !== $access]));

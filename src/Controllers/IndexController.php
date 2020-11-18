@@ -1,9 +1,14 @@
 <?php declare(strict_types=1);
 namespace Naisdevice\Jita\Controllers;
 
+use DateInterval;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\DBAL\{
     Connection,
     Exception\DriverException,
+    Types\Types,
 };
 use Naisdevice\Jita\{
     FlashMessage,
@@ -64,6 +69,8 @@ class IndexController {
         $postToken = uniqid('', true);
         $this->session->setPostToken($postToken);
 
+        $now = new DateTime('now', new DateTimeZone('UTC'));
+
         return $this->view->render($response, 'index.html', [
             'postToken'       => $postToken,
             'user'            => $user,
@@ -71,10 +78,10 @@ class IndexController {
             'selectedGateway' => $gateway,
             'gateways'        => $this->gateways->getUserGateways($user->getObjectId()),
             'requests' => array_map(fn(array $r) : array => [
-                'gateway'       => $r['gateway'],
-                'reason'        => $r['reason'],
-                'expires'       => $r['expires'],
-                'hasExpired'    => $r['expires'] < time(),
+                'gateway'    => $r['gateway'],
+                'reason'     => $r['reason'],
+                'expires'    => $r['expires'],
+                'hasExpired' => new DateTime((string) $r['expires'], new DateTimeZone('UTC')) < $now,
             ], $this->connection->fetchAllAssociative(
                 'SELECT gateway, reason, expires FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
                 ['user_id' => $user->getObjectId()],
@@ -138,7 +145,7 @@ class IndexController {
                 ->withHeader('Location', '/');
         }
 
-        $now = time();
+        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
 
         try {
             $this->connection->insert('requests', [
@@ -146,7 +153,13 @@ class IndexController {
                 'user_id'  => $user->getObjectId(),
                 'gateway'  => $gateway,
                 'reason'   => $reason,
-                'expires'  => $now + ($duration * 3600),
+                'expires'  => $now->add(new DateInterval(sprintf('PT%dH', $duration))),
+            ], [
+                Types::DATETIMETZ_IMMUTABLE,
+                Types::STRING,
+                Types::STRING,
+                Types::STRING,
+                Types::DATETIMETZ_IMMUTABLE,
             ]);
         } catch (DriverException $e){
             $this->flashMessages->addMessage(
