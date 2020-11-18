@@ -21,17 +21,17 @@ class ApiControllerTest extends TestCase {
         $connection = $this->createConfiguredMock(Connection::class, [
             'fetchAllAssociative' => [
                 [
-                    'created' => 123,
+                    'created' => '2020-11-17 20:12:32+00',
                     'gateway' => 'gw-1',
                     'user_id' => 'user-id-1',
-                    'expires' => 125,
+                    'expires' => '2333-11-17 21:12:32+00',
                     'reason'  => 'some reason',
                 ],
                 [
-                    'created' => 234,
+                    'created' => '2020-11-17 20:12:35+00',
                     'gateway' => 'gw-2',
                     'user_id' => 'user-id2',
-                    'expires' => 235,
+                    'expires' => '2020-11-17 21:12:35+00',
                     'reason'  => 'some other reason',
                 ],
             ],
@@ -43,8 +43,8 @@ class ApiControllerTest extends TestCase {
             ->method('write')
             ->with(
                 '{"requests":[' .
-                '{"created":123,"gateway":"gw-1","user_id":"user-id-1","expires":125,"reason":"some reason"},' .
-                '{"created":234,"gateway":"gw-2","user_id":"user-id2","expires":235,"reason":"some other reason"}' .
+                '{"created":"2020-11-17 20:12:32+00","gateway":"gw-1","user_id":"user-id-1","expires":"2333-11-17 21:12:32+00","reason":"some reason","expired":false},' .
+                '{"created":"2020-11-17 20:12:35+00","gateway":"gw-2","user_id":"user-id2","expires":"2020-11-17 21:12:35+00","reason":"some other reason","expired":true}' .
                 ']}'
             );
 
@@ -95,8 +95,7 @@ class ApiControllerTest extends TestCase {
             ->method('fetchAssociative')
             ->with($this->isType('string'), $this->callback(fn(array $params) : bool =>
                 $params[0] === $gateway &&
-                $params[1] === $userId &&
-                (int) $params[2] - time() <= 5 // Allow up to 5 seconds diff on the time because of the time it may take to run the test case
+                $params[1] === $userId
             ))
             ->willReturn($dbResult);
 
