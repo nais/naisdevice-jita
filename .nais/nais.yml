@@ -42,9 +42,10 @@ spec:
     - secret: naisdevice-jita
   gcp:
     sqlInstances:
-      - name: naisdevice-jita-db
+      - name: naisdevice-jita
         type: POSTGRES_12
-        cascadingDelete: true
+        cascadingDelete: {{ db.cascadingDelete }}
+        highAvailability: {{ db.highAvailability }}
         databases:
-          - name: jita
+          - name: naisdevice-jita
             envVarPrefix: DB
