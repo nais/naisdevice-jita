@@ -116,7 +116,8 @@ $app->post('/', IndexController::class . ':createRequest');
 $app->post('/saml/acs', SamlController::class . ':acs');
 $app->get('/saml/logout', SamlController::class . ':logout');
 $app->get('/api/v1/requests', ApiController::class . ':requests');
-$app->get('/api/v1/access/{gateway}/{userId}', ApiController::class . ':access');
+$app->get('/api/v1/gatewayAccess/{gateway}', ApiController::class . ':gatewayAccess');
+$app->get('/api/v1/userAccess/{userId}', ApiController::class . ':userAccess');
 $app->get('/isAlive', fn(Request $request, Response $response) : Response => $response);
 $app->get('/isReady', fn(Request $request, Response $response) : Response => $response);
 
