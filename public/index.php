@@ -49,7 +49,6 @@ $container->set(Twig::class, function() {
 $container->set(Session::class, (new Session())->start());
 $container->set(FlashMessages::class, new FlashMessages()); // Must be initialized after the session entry on the line above
 $container->set(SamlResponseValidator::class, fn() => new SamlResponseValidator(env('SAML_CERT')));
-$container->set(Gateways::class, fn() => new Gateways());
 $container->set(IndexController::class, function(ContainerInterface $c) {
     /** @var Twig */
     $twig = $c->get(Twig::class);
@@ -63,10 +62,7 @@ $container->set(IndexController::class, function(ContainerInterface $c) {
     /** @var FlashMessages */
     $flashMessages = $c->get(FlashMessages::class);
 
-    /** @var Gateways */
-    $gateways = $c->get(Gateways::class);
-
-    return new IndexController($twig, $session, $connection, $flashMessages, env('LOGIN_URL'), env('ISSUER_ENTITY_ID'), $gateways);
+    return new IndexController($twig, $session, $connection, $flashMessages, env('LOGIN_URL'), env('ISSUER_ENTITY_ID'));
 });
 $container->set(SamlController::class, function(ContainerInterface $c) {
     /** @var Session */

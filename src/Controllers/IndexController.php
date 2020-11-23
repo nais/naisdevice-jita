@@ -12,7 +12,6 @@ use Doctrine\DBAL\{
 };
 use Naisdevice\Jita\{
     FlashMessage,
-    Gateways,
     SamlRequest,
     Session,
 };
@@ -20,6 +19,7 @@ use Psr\Http\Message\{
     ResponseInterface as Response,
     ServerRequestInterface as Request,
 };
+use RuntimeException;
 use Slim\{
     Flash\Messages,
     Views\Twig,
@@ -32,16 +32,14 @@ class IndexController {
     private Messages $flashMessages;
     private string $loginUrl;
     private string $entityId;
-    private Gateways $gateways;
 
-    public function __construct(Twig $view, Session $session, Connection $connection, Messages $flashMessages, string $loginUrl, string $entityId, Gateways $gateways) {
+    public function __construct(Twig $view, Session $session, Connection $connection, Messages $flashMessages, string $loginUrl, string $entityId) {
         $this->view          = $view;
         $this->session       = $session;
         $this->connection    = $connection;
         $this->flashMessages = $flashMessages;
         $this->loginUrl      = $loginUrl;
         $this->entityId      = $entityId;
-        $this->gateways      = $gateways;
     }
 
     public function index(Request $request, Response $response) : Response {
@@ -49,6 +47,10 @@ class IndexController {
         $query   = $request->getQueryParams();
         $gateway = array_key_exists('gateway', $query) ? (string) $query['gateway'] : $this->session->getGateway();
         $user    = $this->session->getUser();
+
+        if (null === $gateway) {
+            throw new RuntimeException('Missing gateway');
+        }
 
         $this->session->setGateway($gateway);
 
@@ -75,9 +77,8 @@ class IndexController {
             'postToken'       => $postToken,
             'user'            => $user,
             'flashMessages'   => $this->flashMessages->getMessage(FlashMessage::class),
-            'selectedGateway' => $gateway,
-            'gateways'        => $this->gateways->getUserGateways($user->getObjectId()),
-            'requests' => array_map(fn(array $r) : array => [
+            'gateway'         => $gateway,
+            'requests'        => array_map(fn(array $r) : array => [
                 'gateway'    => $r['gateway'],
                 'reason'     => $r['reason'],
                 'expires'    => $r['expires'],
@@ -176,8 +177,6 @@ class IndexController {
             FlashMessage::class,
             new FlashMessage(sprintf('The request has been registered. Re-connect naisdevice to allow connection to the %s gateway.', $gateway)),
         );
-
-        $this->session->setGateway(null);
 
         return $response
             ->withStatus(302)
