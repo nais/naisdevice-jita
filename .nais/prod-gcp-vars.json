@@ -1,4 +1,5 @@
 {
+  "env": {},
   "ingresses": [
     "https://naisdevice-jita.prod-gcp.nais.io"
   ],
