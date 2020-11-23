@@ -70,3 +70,20 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: .nais/nais.yml
           VARS: .nais/dev-gcp-vars.json
+
+  deploy-prod-gcp:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    name: Deploy to prod-gcp
+    needs:
+      - test
+      - build
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: nais/deploy/actions/deploy@v1
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_KEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/nais.yml
+          VARS: .nais/prod-gcp-vars.json

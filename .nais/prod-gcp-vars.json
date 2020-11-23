@@ -1,0 +1,9 @@
+{
+  "ingresses": [
+    "https://naisdevice-jita.prod-gcp.nais.io"
+  ],
+  "db": {
+    "cascadingDelete": false,
+    "highAvailability": true
+  }
+}
