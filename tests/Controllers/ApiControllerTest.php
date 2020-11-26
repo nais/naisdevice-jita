@@ -30,6 +30,7 @@ class ApiControllerTest extends TestCase {
                     'user_id' => 'user-id-1',
                     'expires' => '2333-11-17 21:12:32+00',
                     'reason'  => 'some reason',
+                    'revoked' => null,
                 ],
                 [
                     'created' => '2020-11-17 20:12:35+00',
@@ -37,6 +38,7 @@ class ApiControllerTest extends TestCase {
                     'user_id' => 'user-id2',
                     'expires' => '2020-11-17 21:12:35+00',
                     'reason'  => 'some other reason',
+                    'revoked' => '2020-11-17 20:15:35+00',
                 ],
             ],
         ]);
@@ -47,8 +49,8 @@ class ApiControllerTest extends TestCase {
             ->method('write')
             ->with(
                 '{"requests":[' .
-                '{"created":"2020-11-17 20:12:32+00","gateway":"gw-1","user_id":"user-id-1","expires":"2333-11-17 21:12:32+00","expired":false,"reason":"some reason"},' .
-                '{"created":"2020-11-17 20:12:35+00","gateway":"gw-2","user_id":"user-id2","expires":"2020-11-17 21:12:35+00","expired":true,"reason":"some other reason"}' .
+                '{"created":"2020-11-17 20:12:32+00","gateway":"gw-1","user_id":"user-id-1","expires":"2333-11-17 21:12:32+00","revoked":null,"reason":"some reason"},' .
+                '{"created":"2020-11-17 20:12:35+00","gateway":"gw-2","user_id":"user-id2","expires":"2020-11-17 21:12:35+00","revoked":"2020-11-17 20:15:35+00","reason":"some other reason"}' .
                 ']}'
             );
 

@@ -25,10 +25,10 @@ class ApiController {
             'gateway' => $row['gateway'],
             'user_id' => $row['user_id'],
             'expires' => $row['expires'],
-            'expired' => new DateTime((string) $row['expires']) < new DateTime('now', new DateTimeZone('UTC')),
+            'revoked' => $row['revoked'],
             'reason'  => $row['reason'],
         ], $this->connection->fetchAllAssociative(
-            'SELECT created, gateway, user_id, expires, reason FROM requests ORDER BY id DESC',
+            'SELECT created, gateway, user_id, expires, reason, revoked FROM requests ORDER BY id DESC',
         ))]));
 
         return $response->withHeader('Content-Type', 'application/json');
@@ -77,6 +77,7 @@ class ApiController {
             ->from('requests')
             ->where($where)
             ->andWhere('expires > NOW()')
+            ->andWhere('revoked IS NULL')
             ->setParameter(0, $param)
             ->execute();
 
