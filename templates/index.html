@@ -4,7 +4,7 @@
     <div class="row mb-3 align-items-center">
         <div class="b-r col-md-6">
             <h3 class="mt-3 mt-md-3">Hi {{ user.getName() }}!</h3>
-            <p>You have requested elevated access to the <code>{{ gateway }}</code> gateway. Please state your business, and set the needed duration.</p>
+            <p>You have requested elevated access to the <code class="text-nowrap">{{ gateway }}</code> gateway. Please state your business, and set the needed duration.</p>
 
             {% for message in flashMessages %}
             <p class="alert alert-{{ message.isError() ? 'danger' : 'success' }}">{{ message.getMessage() }}</p>
@@ -50,7 +50,7 @@
                         <tr>
                             <th scope="col">Gateway</th>
                             <th scope="col">Reason</th>
-                            <th scope="col">Expiry date</th>
+                            <th scope="col" class="text-nowrap">Expiry date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,8 +69,7 @@
                                     <input type="hidden" name="requestId" value="{{ request.id}}">
                                     <span class="text-nowrap">
                                         <button type="submit" class="btn p-0 pr-2 text-danger" title="Revoke access">
-                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-octagon-fill" fill="currentColor"
-                                                xmlns="http://www.w3.org/2000/svg">
+                                            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-x-octagon-fill align-baseline" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd"
                                                     d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z">
                                                 </path>
