@@ -112,7 +112,8 @@ $app
 
 // Routes
 $app->get('/', IndexController::class . ':index');
-$app->post('/', IndexController::class . ':createRequest');
+$app->post('/createRequest', IndexController::class . ':createRequest');
+$app->post('/revokeAccess', IndexController::class . ':revokeAccess');
 $app->post('/saml/acs', SamlController::class . ':acs');
 $app->get('/saml/logout', SamlController::class . ':logout');
 $app->get('/api/v1/requests', ApiController::class . ':requests');
