@@ -10,7 +10,7 @@
             <p class="alert alert-{{ message.isError() ? 'danger' : 'success' }}">{{ message.getMessage() }}</p>
             {% endfor %}
 
-            <form method="post" action="/">
+            <form method="post" action="/createRequest">
                 <input type="hidden" name="postToken" value="{{ postToken }}">
                 <input type="hidden" name="gateway" value="{{ gateway }}">
 
