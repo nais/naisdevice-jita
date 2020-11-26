@@ -37,16 +37,6 @@ class SessionTest extends TestCase {
     }
 
     /**
-     * @covers ::setSamlRequestId
-     * @covers ::getSamlRequestId
-     */
-    public function testCanSetAndGetSamlRequestId() : void {
-        $this->assertNull($this->session->getSamlRequestId());
-        $this->session->setSamlRequestId('id');
-        $this->assertSame('id', $this->session->getSamlRequestId());
-    }
-
-    /**
      * @covers ::setGateway
      * @covers ::getGateway
      */
