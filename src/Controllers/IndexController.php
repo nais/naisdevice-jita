@@ -77,12 +77,15 @@ class IndexController {
             'flashMessages'   => $this->flashMessages->getMessage(FlashMessage::class),
             'gateway'         => $gateway,
             'requests'        => array_map(fn(array $r) : array => [
+                'id'         => $r['id'],
                 'gateway'    => $r['gateway'],
                 'reason'     => $r['reason'],
                 'expires'    => $r['expires'],
+                'revoked'    => $r['revoked'],
                 'hasExpired' => new DateTime((string) $r['expires'], new DateTimeZone('UTC')) < $now,
+                'isRevoked'  => null !== $r['revoked'],
             ], $this->connection->fetchAllAssociative(
-                'SELECT gateway, reason, expires FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
+                'SELECT id, gateway, reason, expires, revoked FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
                 ['user_id' => $user->getObjectId()],
             )),
         ]);
@@ -175,6 +178,81 @@ class IndexController {
             FlashMessage::class,
             new FlashMessage(sprintf('The request has been registered. Re-connect naisdevice to allow connection to the %s gateway.', $gateway)),
         );
+
+        return $response
+            ->withStatus(302)
+            ->withHeader('Location', '/');
+    }
+
+    public function revokeAccess(Request $request, Response $response) : Response {
+        $user      = $this->session->getUser();
+        /** @var array{postToken?:string,requestId?:string} */
+        $params    = $request->getParsedBody() ?: [];
+        $postToken = array_key_exists('postToken', $params) ? trim((string) $params['postToken']) : '';
+        $requestId = array_key_exists('requestId', $params) ? trim((string) $params['requestId']) : '';
+        $error     = false;
+
+        if (null === $user) {
+            $this->session->destroy();
+            return $response
+                ->withStatus(302)
+                ->withHeader('Location', '/');
+        }
+
+        if ($postToken !== $this->session->getPostToken()) {
+            $this->flashMessages->addMessage(
+                FlashMessage::class,
+                new FlashMessage('Incorrect POST token.', true),
+            );
+            $error = true;
+        }
+
+        if ('' === $requestId) {
+            $this->flashMessages->addMessage(
+                FlashMessage::class,
+                new FlashMessage('Missing request ID.', true),
+            );
+            $error = true;
+        }
+
+        if ($error) {
+            return $response
+                ->withStatus(302)
+                ->withHeader('Location', '/');
+        }
+
+        $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
+
+        try {
+            $affectedRows = $this->connection->update('requests', [
+                'revoked' => $now,
+            ], [
+                'id'      => (int) $requestId,
+                'user_id' => $user->getObjectId(),
+                'revoked' => null,
+            ], [
+                'id'      => Types::INTEGER,
+                'user_id' => Types::STRING,
+                'revoked' => Types::DATETIMETZ_IMMUTABLE,
+            ]);
+
+            if (1 === $affectedRows) {
+                $this->flashMessages->addMessage(
+                    FlashMessage::class,
+                    new FlashMessage('Access request has been revoked.'),
+                );
+            } else {
+                $this->flashMessages->addMessage(
+                    FlashMessage::class,
+                    new FlashMessage('Unable to revoke access request.', true),
+                );
+            }
+        } catch (DriverException $e){
+            $this->flashMessages->addMessage(
+                FlashMessage::class,
+                new FlashMessage('Database error.', true),
+            );
+        }
 
         return $response
             ->withStatus(302)
