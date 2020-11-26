@@ -57,8 +57,6 @@ class IndexController {
         if (null === $user) {
             $samlRequest = new SamlRequest($this->entityId);
 
-            $this->session->setSamlRequestId($samlRequest->getId());
-
             return $response
                 ->withStatus(302)
                 ->withHeader('Location', sprintf(

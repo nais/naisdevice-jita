@@ -43,7 +43,7 @@ class SamlControllerTest extends TestCase {
 
         (new SamlController($session, $this->createMock(SamlResponseValidator::class), 'logout-url'))->logout(
             $this->createMock(Request::class),
-            $response1
+            $response1,
         );
     }
 
@@ -67,11 +67,11 @@ class SamlControllerTest extends TestCase {
         $controller = new SamlController(
             $this->createConfiguredMock(Session::class, ['hasUser' => true]),
             $this->createMock(SamlResponseValidator::class),
-            'logout-url'
+            'logout-url',
         );
         $controller->acs(
             $this->createMock(Request::class),
-            $response1
+            $response1,
         );
     }
 
@@ -95,13 +95,13 @@ class SamlControllerTest extends TestCase {
         $controller = new SamlController(
             $this->createConfiguredMock(Session::class, ['hasUser' => false]),
             $this->createMock(SamlResponseValidator::class),
-            'logout-url'
+            'logout-url',
         );
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
                 'getParsedBody' => [],
             ]),
-            $response1
+            $response1,
         );
     }
 
@@ -125,15 +125,15 @@ class SamlControllerTest extends TestCase {
         $controller = new SamlController(
             $this->createConfiguredMock(Session::class, ['hasUser' => false]),
             $this->createMock(SamlResponseValidator::class),
-            'logout-url'
+            'logout-url',
         );
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
                 'getParsedBody' => [
-                    'SAMLResponse' => '<foobar>'
+                    'SAMLResponse' => '<foobar>',
                 ],
             ]),
-            $response1
+            $response1,
         );
     }
 
@@ -164,7 +164,7 @@ class SamlControllerTest extends TestCase {
         $controller = new SamlController(
             $this->createConfiguredMock(Session::class, ['hasUser' => false]),
             $validator,
-            'logout-url'
+            'logout-url',
         );
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
@@ -172,7 +172,7 @@ class SamlControllerTest extends TestCase {
                     'SAMLResponse' => base64_encode('some xml')
                 ],
             ]),
-            $response1
+            $response1,
         );
     }
 
@@ -195,9 +195,9 @@ class SamlControllerTest extends TestCase {
             ->willReturn($this->createMock(Response::class));
 
         $controller = new SamlController(
-            $this->createConfiguredMock(Session::class, ['hasUser' => false, 'getSamlRequestId' => 'response-id']),
+            $this->createConfiguredMock(Session::class, ['hasUser' => false]),
             $this->createConfiguredMock(SamlResponseValidator::class, ['validate' => true]),
-            'logout-url'
+            'logout-url',
         );
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
@@ -205,7 +205,7 @@ class SamlControllerTest extends TestCase {
                     'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response-with-missing-object-id.xml'))
                 ],
             ]),
-            $response1
+            $response1,
         );
     }
 
@@ -228,9 +228,9 @@ class SamlControllerTest extends TestCase {
             ->willReturn($this->createMock(Response::class));
 
         $controller = new SamlController(
-            $this->createConfiguredMock(Session::class, ['hasUser' => false, 'getSamlRequestId' => 'response-id']),
+            $this->createConfiguredMock(Session::class, ['hasUser' => false]),
             $this->createConfiguredMock(SamlResponseValidator::class, ['validate' => true]),
-            'logout-url'
+            'logout-url',
         );
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
@@ -238,7 +238,7 @@ class SamlControllerTest extends TestCase {
                     'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response-with-missing-given-name.xml'))
                 ],
             ]),
-            $response1
+            $response1,
         );
     }
 
@@ -261,9 +261,9 @@ class SamlControllerTest extends TestCase {
             ->willReturn($this->createMock(Response::class));
 
         $controller = new SamlController(
-            $this->createConfiguredMock(Session::class, ['hasUser' => false, 'getSamlRequestId' => 'response-id']),
+            $this->createConfiguredMock(Session::class, ['hasUser' => false]),
             $this->createConfiguredMock(SamlResponseValidator::class, ['validate' => true]),
-            'logout-url'
+            'logout-url',
         );
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
@@ -271,40 +271,7 @@ class SamlControllerTest extends TestCase {
                     'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response-with-missing-email-address.xml'))
                 ],
             ]),
-            $response1
-        );
-    }
-
-    /**
-     * @covers ::acs
-     * @covers ::getUserFromSamlResponse
-     */
-    public function testFailsWhenSamlResponseHasTheWrongResponseId() : void {
-        $body = $this->createMock(StreamInterface::class);
-        $body
-            ->expects($this->once())
-            ->method('write')
-            ->with('Incorrect SAML response');
-
-        $response1 = $this->createConfiguredMock(Response::class, ['getBody' => $body]);
-        $response1
-            ->expects($this->once())
-            ->method('withStatus')
-            ->with(400)
-            ->willReturn($this->createMock(Response::class));
-
-        $controller = new SamlController(
-            $this->createConfiguredMock(Session::class, ['hasUser' => false, 'getSamlRequestId' => 'incorrect-id']),
-            $this->createConfiguredMock(SamlResponseValidator::class, ['validate' => true]),
-            'logout-url'
-        );
-        $controller->acs(
-            $this->createConfiguredMock(Request::class, [
-                'getParsedBody' => [
-                    'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response.xml'))
-                ],
-            ]),
-            $response1
+            $response1,
         );
     }
 
@@ -327,7 +294,7 @@ class SamlControllerTest extends TestCase {
             ->with('Location', '/')
             ->willReturn($response2);
 
-        $session = $this->createConfiguredMock(Session::class, ['hasUser' => false, 'getSamlRequestId' => 'response-id']);
+        $session = $this->createConfiguredMock(Session::class, ['hasUser' => false]);
         $session
             ->expects($this->once())
             ->method('setUser')
@@ -342,7 +309,7 @@ class SamlControllerTest extends TestCase {
         $controller = new SamlController(
             $session,
             $this->createConfiguredMock(SamlResponseValidator::class, ['validate' => true]),
-            'logout-url'
+            'logout-url',
         );
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
@@ -350,7 +317,7 @@ class SamlControllerTest extends TestCase {
                     'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response.xml'))
                 ],
             ]),
-            $response1
+            $response1,
         );
     }
 
@@ -375,7 +342,7 @@ class SamlControllerTest extends TestCase {
         $controller = new SamlController(
             $this->createConfiguredMock(Session::class, ['hasUser' => false]),
             $this->createConfiguredMock(SamlResponseValidator::class, ['validate' => true]),
-            'logout-url'
+            'logout-url',
         );
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
@@ -383,7 +350,7 @@ class SamlControllerTest extends TestCase {
                     'SAMLResponse' => base64_encode('some string')
                 ],
             ]),
-            $response1
+            $response1,
         );
     }
 }

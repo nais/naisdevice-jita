@@ -78,25 +78,6 @@ class Session {
     }
 
     /**
-     * Set the SAML request ID
-     *
-     * @param string $id
-     * @return void
-     */
-    public function setSamlRequestId(string $id) : void {
-        $_SESSION['samlRequestId'] = $id;
-    }
-
-    /**
-     * Get the SAML request ID
-     *
-     * @return ?string
-     */
-    public function getSamlRequestId() : ?string {
-        return array_key_exists('samlRequestId', $_SESSION) ? (string) $_SESSION['samlRequestId'] : null;
-    }
-
-    /**
      * Set the gateway
      *
      * @param ?string $gateway

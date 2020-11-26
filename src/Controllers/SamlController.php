@@ -84,10 +84,6 @@ class SamlController {
         $xpath = new DOMXPath($document);
         $xpath->registerNamespace('a', 'urn:oasis:names:tc:SAML:2.0:assertion');
 
-        if ((string) $xpath->evaluate('string(/*/@InResponseTo)') !== $this->session->getSamlRequestId()) {
-            throw new InvalidArgumentException('Incorrect SAML response');
-        }
-
         $objectId = (string) $xpath->evaluate('string(//a:Attribute[@Name="http://schemas.microsoft.com/identity/claims/objectidentifier"]/a:AttributeValue)');
 
         if (empty($objectId)) {
