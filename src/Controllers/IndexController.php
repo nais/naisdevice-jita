@@ -72,6 +72,7 @@ class IndexController {
         $now = new DateTime('now', new DateTimeZone('UTC'));
 
         return $this->view->render($response, 'index.html', [
+            'hasActiveAccessRequest' => $this->userHasAccessToGateway($user->getObjectId(), $gateway),
             'postToken'              => $postToken,
             'user'                   => $user,
             'flashMessages'          => $this->flashMessages->getMessage(FlashMessage::class),
@@ -89,7 +90,6 @@ class IndexController {
                 'SELECT id, created, gateway, reason, expires, revoked FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
                 ['user_id' => $user->getObjectId()],
             )),
-            'hasActiveAccessRequest' => $this->userHasAccessToGateway($user->getObjectId(), $gateway),
         ]);
     }
 
