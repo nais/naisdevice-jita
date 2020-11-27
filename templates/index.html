@@ -1,14 +1,17 @@
 {% extends "site.html" %}
 {% block content %}
 <div class="index">
-    <div class="row mb-3 align-items-center">
-        <div class="b-r col-md-6">
-            <h3 class="mt-3 mt-md-3">Hi {{ user.getName() }}!</h3>
-            <p>You have requested elevated access to the <code class="text-nowrap">{{ gateway }}</code> gateway. Please state your business, and set the needed duration.</p>
-
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h3 class="mt-3">Hi {{ user.getName() }}!</h3>
             {% for message in flashMessages %}
             <p class="alert alert-{{ message.isError() ? 'danger' : 'success' }}">{{ message.getMessage() }}</p>
             {% endfor %}
+
+            {% if hasActiveAccessRequest %}
+            <p>You currently have a valid access request for the <code class="text-nowrap">{{ gateway }}</code> gateway. You can revoke it below if you wish to create a new access request with a longer duration.</p>
+            {% else %}
+            <p>You have requested elevated access to the <code class="text-nowrap">{{ gateway }}</code> gateway. Please state your business, and set the needed duration.</p>
 
             <form method="post" action="/createRequest">
                 <input type="hidden" name="postToken" value="{{ postToken }}">
@@ -34,14 +37,15 @@
                 </div>
                 <input class="btn btn-primary" type="submit" id="submit" value="Submit">
             </form>
+            {% endif %}
         </div>
-        <div class="b-r col-md-6 mt-3 mt-md-5">
+        <div class="col-md-6">
             <img class="img-fluid d-none d-md-block" src="/images/nais-icon.svg">
         </div>
     </div>
     {% if requests %}
     <div class="row">
-        <div class="b-r col-md-12">
+        <div class="col-md-12">
             <h2 class="mt-3 mt-md-3">Audit log</h2>
             <div class="table-responsive">
                 <table class="table table-hover table-striped">
@@ -49,6 +53,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Gateway</th>
+                            <th scope="col">Created</th>
                             <th scope="col">Reason</th>
                             <th scope="col" class="text-nowrap">Expiry date</th>
                         </tr>
@@ -57,12 +62,13 @@
                         {% for request in requests %}
                         <tr>
                             <th scope="row"><span class="text-nowrap">{{ request.gateway }}</span></th>
+                            <td><span class="text-nowrap">{{ request.created|date }}</span></td>
                             <td>{{ request.reason|nl2br }}</td>
                             <td>
                                 {% if request.isRevoked %}
-                                <em title="Revoked on: {{ request.revoked|date('d/m/Y, H:i:s', 'Europe/Oslo') }}">Revoked</em>
+                                <em title="Revoked on: {{ request.revoked|date }}">Revoked</em>
                                 {% elseif request.hasExpired %}
-                                <em title="Expired on {{ request.expires|date('d/m/Y, H:i:s', 'Europe/Oslo') }}">Expired</em>
+                                <em title="Expired on {{ request.expires|date }}">Expired</em>
                                 {% else %}
                                 <form class="form-inline" method="post" action="/revokeAccess">
                                     <input type="hidden" name="postToken" value="{{ postToken }}">
@@ -75,7 +81,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        {{ request.expires|date('d/m/Y, H:i:s', 'Europe/Oslo') }}
+                                        {{ request.expires|date }}
                                     </span>
                                 </form>
                                 {% endif %}

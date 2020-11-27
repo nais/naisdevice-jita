@@ -57,7 +57,7 @@
       "@psalm"
     ],
     "phpstan": "vendor/bin/phpstan analyse",
-    "psalm": "vendor/bin/psalm",
+    "psalm": "vendor/bin/psalm --no-cache",
     "ci": [
       "@lint",
       "@test",

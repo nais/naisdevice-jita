@@ -72,12 +72,14 @@ class IndexController {
         $now = new DateTime('now', new DateTimeZone('UTC'));
 
         return $this->view->render($response, 'index.html', [
-            'postToken'       => $postToken,
-            'user'            => $user,
-            'flashMessages'   => $this->flashMessages->getMessage(FlashMessage::class),
-            'gateway'         => $gateway,
-            'requests'        => array_map(fn(array $r) : array => [
+            'hasActiveAccessRequest' => $this->userHasAccessToGateway($user->getObjectId(), $gateway),
+            'postToken'              => $postToken,
+            'user'                   => $user,
+            'flashMessages'          => $this->flashMessages->getMessage(FlashMessage::class),
+            'gateway'                => $gateway,
+            'requests'               => array_map(fn(array $r) : array => [
                 'id'         => $r['id'],
+                'created'    => $r['created'],
                 'gateway'    => $r['gateway'],
                 'reason'     => $r['reason'],
                 'expires'    => $r['expires'],
@@ -85,7 +87,7 @@ class IndexController {
                 'hasExpired' => new DateTime((string) $r['expires'], new DateTimeZone('UTC')) < $now,
                 'isRevoked'  => null !== $r['revoked'],
             ], $this->connection->fetchAllAssociative(
-                'SELECT id, gateway, reason, expires, revoked FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
+                'SELECT id, created, gateway, reason, expires, revoked FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
                 ['user_id' => $user->getObjectId()],
             )),
         ]);
@@ -129,6 +131,12 @@ class IndexController {
             $this->flashMessages->addMessage(
                 FlashMessage::class,
                 new FlashMessage('Specify a gateway to request access to.', true),
+            );
+            $error = true;
+        } else if ($this->userHasAccessToGateway($user->getObjectId(), $gateway)) {
+            $this->flashMessages->addMessage(
+                FlashMessage::class,
+                new FlashMessage('You already have a valid access request for this gateway.', true),
             );
             $error = true;
         }
@@ -176,7 +184,7 @@ class IndexController {
 
         $this->flashMessages->addMessage(
             FlashMessage::class,
-            new FlashMessage(sprintf('The request has been registered. Re-connect naisdevice to allow connection to the %s gateway.', $gateway)),
+            new FlashMessage('The request has been registered. The gateway should connect shortly.'),
         );
 
         return $response
@@ -257,5 +265,19 @@ class IndexController {
         return $response
             ->withStatus(302)
             ->withHeader('Location', '/');
+    }
+
+    /**
+     * Check if the current user has a valid access request to a specific gateway
+     *
+     * @param string $userId
+     * @param string $gateway
+     * @return bool
+     */
+    private function userHasAccessToGateway(string $userId, string $gateway) : bool {
+        return false !== $this->connection->fetchOne(
+            'SELECT id FROM requests WHERE user_id = :user_id AND gateway = :gateway AND expires > NOW() AND revoked IS NULL',
+            ['user_id' => $userId, 'gateway' => $gateway],
+        );
     }
 }
