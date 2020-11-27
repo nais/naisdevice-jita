@@ -71,23 +71,32 @@ class IndexController {
 
         $now = new DateTime('now', new DateTimeZone('UTC'));
 
+        $requests = array_map(fn(array $r) : array => [
+            'id'         => $r['id'],
+            'created'    => $r['created'],
+            'gateway'    => $r['gateway'],
+            'reason'     => $r['reason'],
+            'expires'    => $r['expires'],
+            'revoked'    => $r['revoked'],
+            'hasExpired' => new DateTime((string) $r['expires'], new DateTimeZone('UTC')) < $now,
+            'isRevoked'  => null !== $r['revoked'],
+        ], $this->connection->fetchAllAssociative(
+            'SELECT id, created, gateway, reason, expires, revoked FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
+            ['user_id' => $user->getObjectId()],
+        ));
+
+        $hasActiveAccessRequest = 0 < count(array_filter(
+            $requests,
+            fn(array $r) : bool => $r['gateway'] === $gateway && !$r['hasExpired'] && !$r['isRevoked'],
+        ));
+
         return $this->view->render($response, 'index.html', [
-            'postToken'       => $postToken,
-            'user'            => $user,
-            'flashMessages'   => $this->flashMessages->getMessage(FlashMessage::class),
-            'gateway'         => $gateway,
-            'requests'        => array_map(fn(array $r) : array => [
-                'id'         => $r['id'],
-                'gateway'    => $r['gateway'],
-                'reason'     => $r['reason'],
-                'expires'    => $r['expires'],
-                'revoked'    => $r['revoked'],
-                'hasExpired' => new DateTime((string) $r['expires'], new DateTimeZone('UTC')) < $now,
-                'isRevoked'  => null !== $r['revoked'],
-            ], $this->connection->fetchAllAssociative(
-                'SELECT id, gateway, reason, expires, revoked FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
-                ['user_id' => $user->getObjectId()],
-            )),
+            'gateway'                => $gateway,
+            'hasActiveAccessRequest' => $hasActiveAccessRequest,
+            'postToken'              => $postToken,
+            'user'                   => $user,
+            'flashMessages'          => $this->flashMessages->getMessage(FlashMessage::class),
+            'requests'               => $requests,
         ]);
     }
 
@@ -176,7 +185,7 @@ class IndexController {
 
         $this->flashMessages->addMessage(
             FlashMessage::class,
-            new FlashMessage(sprintf('The request has been registered. Re-connect naisdevice to allow connection to the %s gateway.', $gateway)),
+            new FlashMessage('The request has been registered. The gateway should connect shortly.'),
         );
 
         return $response
