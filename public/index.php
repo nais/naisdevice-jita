@@ -24,7 +24,10 @@ use Slim\{
 };
 use Throwable;
 use Tuupola\Middleware\HttpBasicAuthentication;
-use Twig\Extension\DebugExtension;
+use Twig\Extension\{
+    CoreExtension,
+    DebugExtension,
+};
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -39,6 +42,11 @@ $container->set(Twig::class, function() {
     $twig = Twig::create(__DIR__ . '/../templates', [
         'debug' => DEBUG,
     ]);
+
+    /** @var CoreExtension */
+    $core = $twig->getEnvironment()->getExtension(CoreExtension::class);
+    $core->setDateFormat('d/m/Y, H:i:s');
+    $core->setTimezone('Europe/Oslo');
 
     if (DEBUG) {
         $twig->addExtension(new DebugExtension());

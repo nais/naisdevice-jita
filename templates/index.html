@@ -62,13 +62,13 @@
                         {% for request in requests %}
                         <tr>
                             <th scope="row"><span class="text-nowrap">{{ request.gateway }}</span></th>
-                            <td><span class="text-nowrap">{{ request.created|date('d/m/Y, H:i:s', 'Europe/Oslo') }}</span></td>
+                            <td><span class="text-nowrap">{{ request.created|date }}</span></td>
                             <td>{{ request.reason|nl2br }}</td>
                             <td>
                                 {% if request.isRevoked %}
-                                <em title="Revoked on: {{ request.revoked|date('d/m/Y, H:i:s', 'Europe/Oslo') }}">Revoked</em>
+                                <em title="Revoked on: {{ request.revoked|date }}">Revoked</em>
                                 {% elseif request.hasExpired %}
-                                <em title="Expired on {{ request.expires|date('d/m/Y, H:i:s', 'Europe/Oslo') }}">Expired</em>
+                                <em title="Expired on {{ request.expires|date }}">Expired</em>
                                 {% else %}
                                 <form class="form-inline" method="post" action="/revokeAccess">
                                     <input type="hidden" name="postToken" value="{{ postToken }}">
@@ -81,7 +81,7 @@
                                                 </path>
                                             </svg>
                                         </button>
-                                        {{ request.expires|date('d/m/Y, H:i:s', 'Europe/Oslo') }}
+                                        {{ request.expires|date }}
                                     </span>
                                 </form>
                                 {% endif %}
