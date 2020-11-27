@@ -85,14 +85,9 @@ class IndexController {
             ['user_id' => $user->getObjectId()],
         ));
 
-        $hasActiveAccessRequest = 0 < count(array_filter(
-            $requests,
-            fn(array $r) : bool => $r['gateway'] === $gateway && !$r['hasExpired'] && !$r['isRevoked'],
-        ));
-
         return $this->view->render($response, 'index.html', [
             'gateway'                => $gateway,
-            'hasActiveAccessRequest' => $hasActiveAccessRequest,
+            'hasActiveAccessRequest' => $this->userHasAccessToGateway($user->getObjectId(), $gateway),
             'postToken'              => $postToken,
             'user'                   => $user,
             'flashMessages'          => $this->flashMessages->getMessage(FlashMessage::class),
@@ -138,6 +133,12 @@ class IndexController {
             $this->flashMessages->addMessage(
                 FlashMessage::class,
                 new FlashMessage('Specify a gateway to request access to.', true),
+            );
+            $error = true;
+        } else if ($this->userHasAccessToGateway($user->getObjectId(), $gateway)) {
+            $this->flashMessages->addMessage(
+                FlashMessage::class,
+                new FlashMessage('You already have a valid access request for this gateway.', true),
             );
             $error = true;
         }
@@ -266,5 +267,19 @@ class IndexController {
         return $response
             ->withStatus(302)
             ->withHeader('Location', '/');
+    }
+
+    /**
+     * Check if the current user has a valid access request to a specific gateway
+     *
+     * @param string $userId
+     * @param string $gateway
+     * @return bool
+     */
+    private function userHasAccessToGateway(string $userId, string $gateway) : bool {
+        return false !== $this->connection->fetchOne(
+            'SELECT id FROM requests WHERE user_id = :user_id AND gateway = :gateway AND expires > NOW() AND revoked IS NULL',
+            ['user_id' => $userId, 'gateway' => $gateway],
+        );
     }
 }
