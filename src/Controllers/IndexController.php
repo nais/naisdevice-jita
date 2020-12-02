@@ -184,7 +184,7 @@ class IndexController {
 
         $this->flashMessages->addMessage(
             FlashMessage::class,
-            new FlashMessage('The request has been registered. The gateway should connect shortly.'),
+            new FlashMessage('The request has been registered. The gateway will connect shortly.'),
         );
 
         return $response
