@@ -4,7 +4,7 @@
   },
   "ingresses": [
     "https://naisdevice-jita.prod-gcp.nais.io",
-    "https://jita.device.nais.io"
+    "https://naisdevice-jita.nais.io/"
   ],
   "db": {
     "cascadingDelete": false,
