@@ -113,11 +113,8 @@ class Session {
      */
     public function destroy() : self {
         unset($_SESSION);
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-        );
+
+        setcookie((string) session_name(), '', time() - 42000);
 
         return $this;
     }

@@ -43,7 +43,7 @@
     "phpstan/phpstan": "^0.12",
     "phpstan/phpstan-phpunit": "^0.12",
     "phpunit/phpunit": "^9.2",
-    "psalm/plugin-phpunit": "^0.13",
+    "psalm/plugin-phpunit": "^0.15.0",
     "vimeo/psalm": "^4.1"
   },
   "scripts": {
@@ -57,7 +57,7 @@
       "@psalm"
     ],
     "phpstan": "vendor/bin/phpstan analyse",
-    "psalm": "vendor/bin/psalm --no-cache",
+    "psalm": "vendor/bin/psalm --no-cache --show-info=true",
     "ci": [
       "@lint",
       "@test",

@@ -16,6 +16,19 @@
             <directory name="vendor"/>
         </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <RedundantCast>
+            <errorLevel type="info">
+                <file name="src/Session.php"/>
+            </errorLevel>
+        </RedundantCast>
+        <RedundantCastGivenDocblockType>
+            <errorLevel type="info">
+                <file name="src/Controllers/IndexController.php"/>
+                <file name="src/Controllers/ApiController.php"/>
+            </errorLevel>
+        </RedundantCastGivenDocblockType>
+    </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>
