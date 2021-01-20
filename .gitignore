@@ -5,3 +5,5 @@ build
 .phpunit.result.cache
 .DS_Store
 test.php
+.php_cs.cache
+.vscode
