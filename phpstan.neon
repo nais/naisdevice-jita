@@ -5,5 +5,3 @@ parameters:
     - scripts
     - src
     - tests
-  ignoreErrors:
-    - '#Unable to resolve the template type T in call to method static method Doctrine\\DBAL\\DriverManager::getConnection#'
