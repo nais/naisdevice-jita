@@ -5,27 +5,20 @@ use DateInterval;
 use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
-use Doctrine\DBAL\{
-    Connection,
-    Exception\DriverException,
-    Types\Types,
-};
-use Naisdevice\Jita\{
-    FlashMessage,
-    SamlRequest,
-    Session,
-};
-use Psr\Http\Message\{
-    ResponseInterface as Response,
-    ServerRequestInterface as Request,
-};
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Types\Types;
+use Naisdevice\Jita\FlashMessage;
+use Naisdevice\Jita\SamlRequest;
+use Naisdevice\Jita\Session;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
-use Slim\{
-    Flash\Messages,
-    Views\Twig,
-};
+use Slim\Flash\Messages;
+use Slim\Views\Twig;
 
-class IndexController {
+class IndexController
+{
     private Twig $view;
     private Session $session;
     private Connection $connection;
@@ -33,7 +26,8 @@ class IndexController {
     private string $loginUrl;
     private string $entityId;
 
-    public function __construct(Twig $view, Session $session, Connection $connection, Messages $flashMessages, string $loginUrl, string $entityId) {
+    public function __construct(Twig $view, Session $session, Connection $connection, Messages $flashMessages, string $loginUrl, string $entityId)
+    {
         $this->view          = $view;
         $this->session       = $session;
         $this->connection    = $connection;
@@ -42,7 +36,8 @@ class IndexController {
         $this->entityId      = $entityId;
     }
 
-    public function index(Request $request, Response $response) : Response {
+    public function index(Request $request, Response $response): Response
+    {
         /** @var array<string,mixed> */
         $query   = $request->getQueryParams();
         $gateway = array_key_exists('gateway', $query) ? (string) $query['gateway'] : $this->session->getGateway();
@@ -77,7 +72,7 @@ class IndexController {
             'user'                   => $user,
             'flashMessages'          => $this->flashMessages->getMessage(FlashMessage::class),
             'gateway'                => $gateway,
-            'requests'               => array_map(fn(array $r) : array => [
+            'requests'               => array_map(fn (array $r): array => [
                 'id'         => $r['id'],
                 'created'    => $r['created'],
                 'gateway'    => $r['gateway'],
@@ -93,7 +88,8 @@ class IndexController {
         ]);
     }
 
-    public function createRequest(Request $request, Response $response) : Response {
+    public function createRequest(Request $request, Response $response): Response
+    {
         $user      = $this->session->getUser();
         /** @var array{postToken?:string,gateway?:string,reason?:string,duration?:int} */
         $params    = $request->getParsedBody() ?: [];
@@ -133,7 +129,7 @@ class IndexController {
                 new FlashMessage('Specify a gateway to request access to.', true),
             );
             $error = true;
-        } else if ($this->userHasAccessToGateway($user->getObjectId(), $gateway)) {
+        } elseif ($this->userHasAccessToGateway($user->getObjectId(), $gateway)) {
             $this->flashMessages->addMessage(
                 FlashMessage::class,
                 new FlashMessage('You already have a valid access request for this gateway.', true),
@@ -171,7 +167,7 @@ class IndexController {
                 Types::STRING,
                 Types::DATETIMETZ_IMMUTABLE,
             ]);
-        } catch (DriverException $e){
+        } catch (DriverException $e) {
             $this->flashMessages->addMessage(
                 FlashMessage::class,
                 new FlashMessage('Database error.', true),
@@ -192,7 +188,8 @@ class IndexController {
             ->withHeader('Location', '/');
     }
 
-    public function revokeAccess(Request $request, Response $response) : Response {
+    public function revokeAccess(Request $request, Response $response): Response
+    {
         $user      = $this->session->getUser();
         /** @var array{postToken?:string,requestId?:string} */
         $params    = $request->getParsedBody() ?: [];
@@ -255,7 +252,7 @@ class IndexController {
                     new FlashMessage('Unable to revoke access request.', true),
                 );
             }
-        } catch (DriverException $e){
+        } catch (DriverException $e) {
             $this->flashMessages->addMessage(
                 FlashMessage::class,
                 new FlashMessage('Database error.', true),
@@ -274,7 +271,8 @@ class IndexController {
      * @param string $gateway
      * @return bool
      */
-    private function userHasAccessToGateway(string $userId, string $gateway) : bool {
+    private function userHasAccessToGateway(string $userId, string $gateway): bool
+    {
         return false !== $this->connection->fetchOne(
             'SELECT id FROM requests WHERE user_id = :user_id AND gateway = :gateway AND expires > NOW() AND revoked IS NULL',
             ['user_id' => $userId, 'gateway' => $gateway],

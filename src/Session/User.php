@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 namespace Naisdevice\Jita\Session;
 
-class User {
+class User
+{
     private string $objectId;
     private string $email;
     private string $name;
@@ -17,7 +18,8 @@ class User {
      * @param string $name
      * @param array<string> $groups
      */
-    public function __construct(string $objectId, string $email, string $name, array $groups) {
+    public function __construct(string $objectId, string $email, string $name, array $groups)
+    {
         $this->objectId = $objectId;
         $this->email    = $email;
         $this->name     = $name;
@@ -29,7 +31,8 @@ class User {
      *
      * @return string
      */
-    public function getObjectId() : string {
+    public function getObjectId(): string
+    {
         return $this->objectId;
     }
 
@@ -38,7 +41,8 @@ class User {
      *
      * @return string
      */
-    public function getEmail() : string {
+    public function getEmail(): string
+    {
         return $this->email;
     }
 
@@ -47,7 +51,8 @@ class User {
      *
      * @return string
      */
-    public function getName() : string {
+    public function getName(): string
+    {
         return $this->name;
     }
 
@@ -56,7 +61,8 @@ class User {
      *
      * @return array<string>
      */
-    public function getGroups() : array {
+    public function getGroups(): array
+    {
         return $this->groups;
     }
 }

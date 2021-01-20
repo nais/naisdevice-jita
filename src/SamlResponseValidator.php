@@ -6,7 +6,8 @@ use OneLogin\Saml2\Utils;
 /**
  * @codeCoverageIgnore
  */
-class SamlResponseValidator {
+class SamlResponseValidator
+{
     private string $certificate;
 
     /**
@@ -14,7 +15,8 @@ class SamlResponseValidator {
      *
      * @param string $certificate
      */
-    public function __construct(string $certificate) {
+    public function __construct(string $certificate)
+    {
         $this->certificate = $certificate;
     }
 
@@ -24,7 +26,8 @@ class SamlResponseValidator {
      * @param string $responseXml The complete SAML XML response
      * @return bool
      */
-    public function validate(string $responseXml) : bool {
+    public function validate(string $responseXml): bool
+    {
         return Utils::validateSign($responseXml, $this->certificate);
     }
 }

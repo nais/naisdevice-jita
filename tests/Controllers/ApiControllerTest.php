@@ -1,27 +1,25 @@
 <?php declare(strict_types=1);
 namespace Naisdevice\Jita\Controllers;
 
-use Doctrine\DBAL\{
-    Connection,
-    Driver\PDO\Statement,
-    Query\QueryBuilder,
-};
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\PDO\Statement;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\{
-    ServerRequestInterface as Request,
-    StreamInterface,
-    ResponseInterface as Response,
-};
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * @coversDefaultClass Naisdevice\Jita\Controllers\ApiController
  */
-class ApiControllerTest extends TestCase {
+class ApiControllerTest extends TestCase
+{
     /**
      * @covers ::__construct
      * @covers ::requests
      */
-    public function testWillRenderRequests() : void {
+    public function testWillRenderRequests(): void
+    {
         $connection = $this->createConfiguredMock(Connection::class, [
             'fetchAllAssociative' => [
                 [
@@ -72,7 +70,8 @@ class ApiControllerTest extends TestCase {
      * @covers ::gatewayAccess
      * @covers ::getAccessRows
      */
-    public function testCanGetGatewayAccess() : void {
+    public function testCanGetGatewayAccess(): void
+    {
         $queryBuilder = $this->createConfiguredMock(QueryBuilder::class, [
             'select'   => $this->returnSelf(),
             'from'     => $this->returnSelf(),
@@ -115,7 +114,7 @@ class ApiControllerTest extends TestCase {
         $body
             ->expects($this->once())
             ->method('write')
-            ->with($this->callback(function(string $json) : bool {
+            ->with($this->callback(function (string $json): bool {
                 /** @var array<int,array{user_id:string,gateway:string,expires:string,ttl?:mixed}> */
                 $body = json_decode($json, true);
 
@@ -157,7 +156,8 @@ class ApiControllerTest extends TestCase {
      * @covers ::userAccess
      * @covers ::getAccessRows
      */
-    public function testCanGetUserAccess() : void {
+    public function testCanGetUserAccess(): void
+    {
         $queryBuilder = $this->createConfiguredMock(QueryBuilder::class, [
             'select'   => $this->returnSelf(),
             'from'     => $this->returnSelf(),
@@ -200,7 +200,7 @@ class ApiControllerTest extends TestCase {
         $body
             ->expects($this->once())
             ->method('write')
-            ->with($this->callback(function(string $json) : bool {
+            ->with($this->callback(function (string $json): bool {
                 /** @var array<int,array{user_id:string,gateway:string,expires:string,ttl?:mixed}> */
                 $body = json_decode($json, true);
 

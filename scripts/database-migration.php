@@ -2,16 +2,14 @@
 namespace Naisdevice\Jita;
 
 use Doctrine\DBAL\DriverManager;
-use Monolog\{
-    Formatter\LineFormatter,
-    Handler\StreamHandler,
-    Logger,
-};
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $logger = new Logger('naisdevice-jita-db-migrations', [
-    (new StreamHandler('php://stdout'))->setFormatter(new LineFormatter(null, null, false, true))
+    (new StreamHandler('php://stdout'))->setFormatter(new LineFormatter(null, null, false, true)),
 ]);
 
 if ('' === env('DB_URL')) {

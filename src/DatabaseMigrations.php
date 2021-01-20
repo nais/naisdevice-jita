@@ -1,16 +1,15 @@
 <?php declare(strict_types=1);
 namespace Naisdevice\Jita;
 
-use Doctrine\DBAL\{
-    Connection,
-    Exception,
-    Exception\TableNotFoundException,
-};
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use InvalidArgumentException;
 use Monolog\Logger;
 use RuntimeException;
 
-class DatabaseMigrations {
+class DatabaseMigrations
+{
     const MIGRATION_ERROR   = 1;
     const MIGRATION_SUCCESS = 0;
 
@@ -24,7 +23,8 @@ class DatabaseMigrations {
      */
     private array $migrations;
 
-    public function __construct(Connection $connection, string $migrationsPath, Logger $logger = null) {
+    public function __construct(Connection $connection, string $migrationsPath, Logger $logger = null)
+    {
         $this->logger     = $logger ?: new Logger(__CLASS__);
         $this->connection = $connection;
         $this->migrations = $this->getMigrationsFilesFromPath($migrationsPath);
@@ -35,7 +35,8 @@ class DatabaseMigrations {
      *
      * @return int
      */
-    public function migrate() : int {
+    public function migrate(): int
+    {
         try {
             $currentVersion = $this->getCurrentVersion();
         } catch (RuntimeException $e) {
@@ -69,7 +70,8 @@ class DatabaseMigrations {
      * @throws RuntimeException
      * @return int
      */
-    private function getCurrentVersion() : int {
+    private function getCurrentVersion(): int
+    {
         try {
             return (int) $this->connection->fetchOne("SELECT MAX(version) FROM migrations");
         } catch (TableNotFoundException $e) {
@@ -90,7 +92,8 @@ class DatabaseMigrations {
      * @throws InvalidArgumentException
      * @return string[]
      */
-    private function getMigrationsFilesFromPath(string $dir) : array {
+    private function getMigrationsFilesFromPath(string $dir): array
+    {
         $dir = rtrim($dir, '/');
 
         if (!is_dir($dir)) {
@@ -103,12 +106,12 @@ class DatabaseMigrations {
         // Only keep specific files
         $migrationFiles = array_values(array_filter(
             $allFiles,
-            fn(string $path) : bool => 1 === preg_match('/^[0-9]{4}-.*\.sql$/', $path),
+            fn (string $path): bool => 1 === preg_match('/^[0-9]{4}-.*\.sql$/', $path),
         ));
 
         // Prepend $dir to get the whole path
         return array_map(
-            fn(string $path) : string => $dir . '/' . $path,
+            fn (string $path): string => $dir . '/' . $path,
             $migrationFiles,
         );
     }

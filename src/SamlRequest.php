@@ -4,7 +4,8 @@ namespace Naisdevice\Jita;
 use DateTime;
 use DateTimeZone;
 
-class SamlRequest {
+class SamlRequest
+{
     private string $issuer;
     private string $id;
 
@@ -13,7 +14,8 @@ class SamlRequest {
      *
      * @param string $issuer
      */
-    public function __construct(string $issuer) {
+    public function __construct(string $issuer)
+    {
         $this->issuer = $issuer;
         $this->id     = uniqid('id_', true);
     }
@@ -23,7 +25,8 @@ class SamlRequest {
      *
      * @return string
      */
-    public function getId() : string {
+    public function getId(): string
+    {
         return $this->id;
     }
 
@@ -32,7 +35,8 @@ class SamlRequest {
      *
      * @return string
      */
-    public function __toString() : string {
+    public function __toString(): string
+    {
         $samlRequest = <<<SAMLRequest
 <samlp:AuthnRequest
     xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"

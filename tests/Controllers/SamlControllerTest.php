@@ -1,27 +1,25 @@
 <?php declare(strict_types=1);
 namespace Naisdevice\Jita\Controllers;
 
-use Naisdevice\Jita\{
-    SamlResponseValidator,
-    Session,
-    Session\User,
-};
+use Naisdevice\Jita\SamlResponseValidator;
+use Naisdevice\Jita\Session;
+use Naisdevice\Jita\Session\User;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\{
-    ServerRequestInterface as Request,
-    StreamInterface,
-    ResponseInterface as Response,
-};
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * @coversDefaultClass Naisdevice\Jita\Controllers\SamlController
  */
-class SamlControllerTest extends TestCase {
+class SamlControllerTest extends TestCase
+{
     /**
      * @covers ::__construct
      * @covers ::logout
      */
-    public function testCanLogOut() : void {
+    public function testCanLogOut(): void
+    {
         $session = $this->createMock(Session::class);
         $session
             ->expects($this->once())
@@ -50,7 +48,8 @@ class SamlControllerTest extends TestCase {
     /**
      * @covers ::acs
      */
-    public function testFailsWhenSessionAlreadyExists() : void {
+    public function testFailsWhenSessionAlreadyExists(): void
+    {
         $body = $this->createMock(StreamInterface::class);
         $body
             ->expects($this->once())
@@ -78,7 +77,8 @@ class SamlControllerTest extends TestCase {
     /**
      * @covers ::acs
      */
-    public function testFailsWhenRequestIsMissingSamlResponse() : void {
+    public function testFailsWhenRequestIsMissingSamlResponse(): void
+    {
         $body = $this->createMock(StreamInterface::class);
         $body
             ->expects($this->once())
@@ -108,7 +108,8 @@ class SamlControllerTest extends TestCase {
     /**
      * @covers ::acs
      */
-    public function testFailsWhenSamlResponseIsNotCorrectlyEncoded() : void {
+    public function testFailsWhenSamlResponseIsNotCorrectlyEncoded(): void
+    {
         $body = $this->createMock(StreamInterface::class);
         $body
             ->expects($this->once())
@@ -140,7 +141,8 @@ class SamlControllerTest extends TestCase {
     /**
      * @covers ::acs
      */
-    public function testFailsWhenSamlResponseIsInvalid() : void {
+    public function testFailsWhenSamlResponseIsInvalid(): void
+    {
         $body = $this->createMock(StreamInterface::class);
         $body
             ->expects($this->once())
@@ -169,7 +171,7 @@ class SamlControllerTest extends TestCase {
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
                 'getParsedBody' => [
-                    'SAMLResponse' => base64_encode('some xml')
+                    'SAMLResponse' => base64_encode('some xml'),
                 ],
             ]),
             $response1,
@@ -180,7 +182,8 @@ class SamlControllerTest extends TestCase {
      * @covers ::acs
      * @covers ::getUserFromSamlResponse
      */
-    public function testFailsWhenSamlResponseIsMissingObjectId() : void {
+    public function testFailsWhenSamlResponseIsMissingObjectId(): void
+    {
         $body = $this->createMock(StreamInterface::class);
         $body
             ->expects($this->once())
@@ -202,7 +205,7 @@ class SamlControllerTest extends TestCase {
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
                 'getParsedBody' => [
-                    'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response-with-missing-object-id.xml'))
+                    'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response-with-missing-object-id.xml')),
                 ],
             ]),
             $response1,
@@ -213,7 +216,8 @@ class SamlControllerTest extends TestCase {
      * @covers ::acs
      * @covers ::getUserFromSamlResponse
      */
-    public function testFailsWhenSamlResponseIsMissingGivenNameObjectId() : void {
+    public function testFailsWhenSamlResponseIsMissingGivenNameObjectId(): void
+    {
         $body = $this->createMock(StreamInterface::class);
         $body
             ->expects($this->once())
@@ -235,7 +239,7 @@ class SamlControllerTest extends TestCase {
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
                 'getParsedBody' => [
-                    'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response-with-missing-given-name.xml'))
+                    'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response-with-missing-given-name.xml')),
                 ],
             ]),
             $response1,
@@ -246,7 +250,8 @@ class SamlControllerTest extends TestCase {
      * @covers ::acs
      * @covers ::getUserFromSamlResponse
      */
-    public function testFailsWhenSamlResponseIsMissingEmailAddress() : void {
+    public function testFailsWhenSamlResponseIsMissingEmailAddress(): void
+    {
         $body = $this->createMock(StreamInterface::class);
         $body
             ->expects($this->once())
@@ -268,7 +273,7 @@ class SamlControllerTest extends TestCase {
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
                 'getParsedBody' => [
-                    'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response-with-missing-email-address.xml'))
+                    'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response-with-missing-email-address.xml')),
                 ],
             ]),
             $response1,
@@ -279,7 +284,8 @@ class SamlControllerTest extends TestCase {
      * @covers ::acs
      * @covers ::getUserFromSamlResponse
      */
-    public function testCanSuccessfullySetUserInSession() : void {
+    public function testCanSuccessfullySetUserInSession(): void
+    {
         $response2 = $this->createMock(Response::class);
         $response2
             ->expects($this->once())
@@ -298,7 +304,7 @@ class SamlControllerTest extends TestCase {
         $session
             ->expects($this->once())
             ->method('setUser')
-            ->with($this->callback(function(User $user) : bool {
+            ->with($this->callback(function (User $user): bool {
                 return
                     'user-id' === $user->getObjectId() &&
                     'user@nav.no' === $user->getEmail() &&
@@ -314,7 +320,7 @@ class SamlControllerTest extends TestCase {
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
                 'getParsedBody' => [
-                    'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response.xml'))
+                    'SAMLResponse' => base64_encode((string) file_get_contents(__DIR__ . '/../fixtures/response.xml')),
                 ],
             ]),
             $response1,
@@ -325,7 +331,8 @@ class SamlControllerTest extends TestCase {
      * @covers ::acs
      * @covers ::getUserFromSamlResponse
      */
-    public function testFailsWhenSamlResponseIsNotValid() : void {
+    public function testFailsWhenSamlResponseIsNotValid(): void
+    {
         $body = $this->createMock(StreamInterface::class);
         $body
             ->expects($this->once())
@@ -347,7 +354,7 @@ class SamlControllerTest extends TestCase {
         $controller->acs(
             $this->createConfiguredMock(Request::class, [
                 'getParsedBody' => [
-                    'SAMLResponse' => base64_encode('some string')
+                    'SAMLResponse' => base64_encode('some string'),
                 ],
             ]),
             $response1,

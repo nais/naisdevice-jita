@@ -2,32 +2,22 @@
 namespace Naisdevice\Jita;
 
 use DI\Container;
-use Doctrine\DBAL\{
-    DriverManager,
-    Connection,
-};
-use Naisdevice\Jita\Controllers\{
-    ApiController,
-    IndexController,
-    SamlController,
-};
-use Psr\{
-    Container\ContainerInterface,
-    Http\Message\ResponseInterface as Response,
-    Http\Message\ServerRequestInterface as Request,
-};
-use Slim\{
-    Factory\AppFactory,
-    Flash\Messages as FlashMessages,
-    Views\Twig,
-    Views\TwigMiddleware,
-};
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
+use Naisdevice\Jita\Controllers\ApiController;
+use Naisdevice\Jita\Controllers\IndexController;
+use Naisdevice\Jita\Controllers\SamlController;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Factory\AppFactory;
+use Slim\Flash\Messages as FlashMessages;
+use Slim\Views\Twig;
+use Slim\Views\TwigMiddleware;
 use Throwable;
 use Tuupola\Middleware\HttpBasicAuthentication;
-use Twig\Extension\{
-    CoreExtension,
-    DebugExtension,
-};
+use Twig\Extension\CoreExtension;
+use Twig\Extension\DebugExtension;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -35,10 +25,10 @@ define('DEBUG', '1' === env('DEBUG'));
 
 // Create and populate container
 $container = new Container();
-$container->set(Connection::class, fn() => DriverManager::getConnection([
+$container->set(Connection::class, fn () => DriverManager::getConnection([
     'url' => env('DB_URL'),
 ]));
-$container->set(Twig::class, function() {
+$container->set(Twig::class, function () {
     $twig = Twig::create(__DIR__ . '/../templates', [
         'debug' => DEBUG,
     ]);
@@ -56,8 +46,8 @@ $container->set(Twig::class, function() {
 });
 $container->set(Session::class, (new Session())->start());
 $container->set(FlashMessages::class, new FlashMessages()); // Must be initialized after the session entry on the line above
-$container->set(SamlResponseValidator::class, fn() => new SamlResponseValidator(env('SAML_CERT')));
-$container->set(IndexController::class, function(ContainerInterface $c) {
+$container->set(SamlResponseValidator::class, fn () => new SamlResponseValidator(env('SAML_CERT')));
+$container->set(IndexController::class, function (ContainerInterface $c) {
     /** @var Twig */
     $twig = $c->get(Twig::class);
 
@@ -72,7 +62,7 @@ $container->set(IndexController::class, function(ContainerInterface $c) {
 
     return new IndexController($twig, $session, $connection, $flashMessages, env('LOGIN_URL'), env('ISSUER_ENTITY_ID'));
 });
-$container->set(SamlController::class, function(ContainerInterface $c) {
+$container->set(SamlController::class, function (ContainerInterface $c) {
     /** @var Session */
     $session = $c->get(Session::class);
 
@@ -81,7 +71,7 @@ $container->set(SamlController::class, function(ContainerInterface $c) {
 
     return new SamlController($session, $validator, env('LOGOUT_URL'));
 });
-$container->set(ApiController::class, function(ContainerInterface $c) {
+$container->set(ApiController::class, function (ContainerInterface $c) {
     /** @var Connection */
     $connection = $c->get(Connection::class);
 
@@ -106,7 +96,7 @@ $app->add(new Middleware\RemoveDuplicateAuthHeader());
 $app->add(new Middleware\EnvironmentValidation(getenv()));
 $app
     ->addErrorMiddleware(DEBUG, true, true)
-    ->setDefaultErrorHandler(function(Request $request, Throwable $exception, bool $displayErrorDetails) use ($app) {
+    ->setDefaultErrorHandler(function (Request $request, Throwable $exception, bool $displayErrorDetails) use ($app) {
         /** @var ContainerInterface */
         $container = $app->getContainer();
 
@@ -127,8 +117,8 @@ $app->get('/saml/logout', SamlController::class . ':logout');
 $app->get('/api/v1/requests', ApiController::class . ':requests');
 $app->get('/api/v1/gatewayAccess/{gateway}', ApiController::class . ':gatewayAccess');
 $app->get('/api/v1/userAccess/{userId}', ApiController::class . ':userAccess');
-$app->get('/isAlive', fn(Request $request, Response $response) : Response => $response);
-$app->get('/isReady', fn(Request $request, Response $response) : Response => $response);
+$app->get('/isAlive', fn (Request $request, Response $response): Response => $response);
+$app->get('/isReady', fn (Request $request, Response $response): Response => $response);
 
 // Run the app
 $app->run();

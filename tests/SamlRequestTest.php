@@ -7,11 +7,13 @@ use SimpleXMLElement;
 /**
  * @coversDefaultClass Naisdevice\Jita\SamlRequest
  */
-class SamlRequestTest extends TestCase {
+class SamlRequestTest extends TestCase
+{
     /**
      * @return array<int,array{issuer:string}>
      */
-    public function getSamlRequestParams() : array {
+    public function getSamlRequestParams(): array
+    {
         return [
             [
                 'issuer' => 'some-issuer',
@@ -25,7 +27,8 @@ class SamlRequestTest extends TestCase {
      * @covers ::__toString
      * @covers ::getId
      */
-    public function testCanPresentAsString(string $issuer) : void {
+    public function testCanPresentAsString(string $issuer): void
+    {
         $samlRequest = new SamlRequest($issuer);
 
         /** @var SimpleXMLElement */

@@ -6,13 +6,15 @@ use PHPUnit\Framework\TestCase;
 /**
  * @coversDefaultClass Naisdevice\Jita\FlashMessage
  */
-class FlashMessageTest extends TestCase {
+class FlashMessageTest extends TestCase
+{
     /**
      * @covers ::__construct
      * @covers ::isError
      * @covers ::getMessage
      */
-    public function testCanGetValues() : void {
+    public function testCanGetValues(): void
+    {
         $message = new FlashMessage('some message');
         $this->assertSame('some message', $message->getMessage());
         $this->assertFalse($message->isError());

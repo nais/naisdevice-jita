@@ -2,21 +2,20 @@
 namespace Naisdevice\Jita\Middleware;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Http\{
-    Message\ResponseInterface,
-    Message\ServerRequestInterface,
-    Server\RequestHandlerInterface,
-};
-use RuntimeException;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * @coversDefaultClass Naisdevice\Jita\Middleware\RemoveDuplicateAuthHeader
  */
-class RemoveDuplicateAuthHeaderTest extends TestCase {
+class RemoveDuplicateAuthHeaderTest extends TestCase
+{
     /**
      * @covers ::__invoke
      */
-    public function testCanRemoveDuplicateAuthHeaders() : void {
+    public function testCanRemoveDuplicateAuthHeaders(): void
+    {
         $response = $this->createMock(ResponseInterface::class);
         $modifiedRequest = $this->createMock(ServerRequestInterface::class);
         $request  = $this->createMock(ServerRequestInterface::class);

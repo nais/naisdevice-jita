@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 namespace Naisdevice\Jita;
 
-class FlashMessage {
+class FlashMessage
+{
     private string $message;
     private bool $isError = false;
 
@@ -11,16 +12,19 @@ class FlashMessage {
      * @param string $message
      * @param bool $isError
      */
-    public function __construct(string $message, bool $isError = false) {
+    public function __construct(string $message, bool $isError = false)
+    {
         $this->message = $message;
         $this->isError = $isError;
     }
 
-    public function isError() : bool {
+    public function isError(): bool
+    {
         return $this->isError;
     }
 
-    public function getMessage() : string {
+    public function getMessage(): string
+    {
         return $this->message;
     }
 }

@@ -8,6 +8,7 @@ namespace Naisdevice\Jita;
  * @return string
  * @codeCoverageIgnore
  */
-function env(string $key) : string {
+function env(string $key): string
+{
     return trim((string) getenv($key));
 }

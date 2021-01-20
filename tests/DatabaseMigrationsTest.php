@@ -7,17 +7,18 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use InvalidArgumentException;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 /**
  * @coversDefaultClass Naisdevice\Jita\DatabaseMigrations
  */
-class DatabaseMigrationsTest extends TestCase {
+class DatabaseMigrationsTest extends TestCase
+{
     /**
      * @covers ::__construct
      * @covers ::getMigrationsFilesFromPath
      */
-    public function testThrowsExceptionOnInvalidDirectory() : void {
+    public function testThrowsExceptionOnInvalidDirectory(): void
+    {
         $this->expectExceptionObject(new InvalidArgumentException('Not a directory: /foo/bar'));
         new DatabaseMigrations($this->createMock(Connection::class), '/foo/bar');
     }
@@ -27,7 +28,8 @@ class DatabaseMigrationsTest extends TestCase {
      * @covers ::migrate
      * @covers ::getMigrationsFilesFromPath
      */
-    public function testDoesNothingOnEmptyMigrationsDirectory() : void {
+    public function testDoesNothingOnEmptyMigrationsDirectory(): void
+    {
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->never())
@@ -39,7 +41,8 @@ class DatabaseMigrationsTest extends TestCase {
     /**
      * @covers ::getCurrentVersion
      */
-    public function testWarningOnMissingMigrationsTable() : void {
+    public function testWarningOnMissingMigrationsTable(): void
+    {
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -58,7 +61,8 @@ class DatabaseMigrationsTest extends TestCase {
      * @covers ::migrate
      * @covers ::getCurrentVersion
      */
-    public function testThrowsExceptionOnDatabaseError() : void {
+    public function testThrowsExceptionOnDatabaseError(): void
+    {
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -80,7 +84,8 @@ class DatabaseMigrationsTest extends TestCase {
      * @covers ::getCurrentVersion
      * @covers ::getMigrationsFilesFromPath
      */
-    public function testCanRunMigrations() : void {
+    public function testCanRunMigrations(): void
+    {
         $connection = $this->createConfiguredMock(Connection::class, [
             'fetchOne' => '1',
         ]);
@@ -98,7 +103,8 @@ class DatabaseMigrationsTest extends TestCase {
      * @covers ::migrate
      * @covers ::getCurrentVersion
      */
-    public function testReturnsNonZeroOnErrorDuringMigration() : void {
+    public function testReturnsNonZeroOnErrorDuringMigration(): void
+    {
         $connection = $this->createConfiguredMock(Connection::class, [
             'fetchOne' => false,
         ]);

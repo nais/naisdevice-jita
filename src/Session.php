@@ -4,7 +4,8 @@ namespace Naisdevice\Jita;
 use Naisdevice\Jita\Session\User;
 use RuntimeException;
 
-class Session {
+class Session
+{
     private int $cookieLifetime;
 
     /**
@@ -13,7 +14,8 @@ class Session {
      * @codeCoverageIgnore
      * @param int $cookieLifetime Lifetime of the session cookie, in seconds
      */
-    public function __construct(int $cookieLifetime = 3600) {
+    public function __construct(int $cookieLifetime = 3600)
+    {
         $this->cookieLifetime = $cookieLifetime;
     }
 
@@ -23,7 +25,8 @@ class Session {
      * @codeCoverageIgnore
      * @return self
      */
-    public function start() : self {
+    public function start(): self
+    {
         session_start([
             'cookie_lifetime' => $this->cookieLifetime,
         ]);
@@ -38,7 +41,8 @@ class Session {
      * @throws RuntimeException
      * @return void
      */
-    public function setUser(User $user) : void {
+    public function setUser(User $user): void
+    {
         $_SESSION['user'] = $user;
     }
 
@@ -47,7 +51,8 @@ class Session {
      *
      * @return ?User
      */
-    public function getUser() : ?User {
+    public function getUser(): ?User
+    {
         $user = $_SESSION['user'] ?? null;
 
         if (null === $user || !$user instanceof User) {
@@ -64,7 +69,8 @@ class Session {
      * @param string $token
      * @return void
      */
-    public function setPostToken(string $token) : void {
+    public function setPostToken(string $token): void
+    {
         $_SESSION['postToken'] = $token;
     }
 
@@ -73,7 +79,8 @@ class Session {
      *
      * @return ?string
      */
-    public function getPostToken() : ?string {
+    public function getPostToken(): ?string
+    {
         return array_key_exists('postToken', $_SESSION) ? (string) $_SESSION['postToken'] : null;
     }
 
@@ -83,7 +90,8 @@ class Session {
      * @param ?string $gateway
      * @return void
      */
-    public function setGateway(?string $gateway = null) : void {
+    public function setGateway(?string $gateway = null): void
+    {
         $_SESSION['gateway'] = $gateway;
     }
 
@@ -92,7 +100,8 @@ class Session {
      *
      * @return ?string
      */
-    public function getGateway() : ?string {
+    public function getGateway(): ?string
+    {
         return array_key_exists('gateway', $_SESSION) ? (string) $_SESSION['gateway'] : null;
     }
 
@@ -101,7 +110,8 @@ class Session {
      *
      * @return bool
      */
-    public function hasUser() : bool {
+    public function hasUser(): bool
+    {
         return array_key_exists('user', $_SESSION) && $_SESSION['user'] instanceof User;
     }
 
@@ -111,7 +121,8 @@ class Session {
      * @codeCoverageIgnore
      * @return self
      */
-    public function destroy() : self {
+    public function destroy(): self
+    {
         unset($_SESSION);
 
         setcookie((string) session_name(), '', time() - 42000);

@@ -1,14 +1,13 @@
 <?php declare(strict_types=1);
 namespace Naisdevice\Jita\Middleware;
 
-use Psr\Http\{
-    Message\ResponseInterface as Response,
-    Message\ServerRequestInterface as Request,
-    Server\RequestHandlerInterface as RequestHandler,
-};
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use RuntimeException;
 
-class EnvironmentValidation {
+class EnvironmentValidation
+{
     /** @var array<string,string> */
     private array $env;
 
@@ -17,7 +16,8 @@ class EnvironmentValidation {
      *
      * @param array<string,string> $env
      */
-    public function __construct(array $env) {
+    public function __construct(array $env)
+    {
         $this->env = $env;
     }
 
@@ -29,7 +29,8 @@ class EnvironmentValidation {
      * @throws RuntimeException
      * @return Response
      */
-    public function __invoke(Request $request, RequestHandler $handler) : Response {
+    public function __invoke(Request $request, RequestHandler $handler): Response
+    {
         $missing = [];
 
         foreach ([
