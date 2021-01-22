@@ -3,22 +3,20 @@ namespace Naisdevice\Jita\Controllers;
 
 use Doctrine\DBAL\Connection;
 use Naisdevice\Jita\Session;
-use PHPUnit\Framework\{
-    MockObject\MockObject,
-    TestCase,
-};
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Prometheus\CollectorRegistry;
 use RuntimeException;
-use Slim\{
-    Flash\Messages,
-    Psr7\Request,
-    Psr7\Response,
-    Views\Twig,
-};
+use Slim\Flash\Messages;
+use Slim\Psr7\Request;
+use Slim\Psr7\Response;
+use Slim\Views\Twig;
 
 /**
  * @coversDefaultClass Naisdevice\Jita\Controllers\IndexController
  */
-class IndexControllerTest extends TestCase {
+class IndexControllerTest extends TestCase
+{
     /** @var Request&MockObject */
     private Request $request;
 
@@ -37,17 +35,22 @@ class IndexControllerTest extends TestCase {
     /** @var Messages&MockObject */
     private Messages $flashMessages;
 
+    /** @var CollectorRegistry&MockObject */
+    private CollectorRegistry $collectorRegistry;
+
     private IndexController $controller;
     private string $loginUrl = 'https://loginurl';
     private string $entityId = 'entity-id';
 
-    protected function setUp() : void {
-        $this->request       = $this->createMock(Request::class);
-        $this->response      = $this->createMock(Response::class);
-        $this->view          = $this->createMock(Twig::class);
-        $this->session       = $this->createMock(Session::class);
-        $this->connection    = $this->createMock(Connection::class);
-        $this->flashMessages = $this->createMock(Messages::class);
+    protected function setUp(): void
+    {
+        $this->request           = $this->createMock(Request::class);
+        $this->response          = $this->createMock(Response::class);
+        $this->view              = $this->createMock(Twig::class);
+        $this->session           = $this->createMock(Session::class);
+        $this->connection        = $this->createMock(Connection::class);
+        $this->flashMessages     = $this->createMock(Messages::class);
+        $this->collectorRegistry = $this->createMock(CollectorRegistry::class);
         $this->controller    = new IndexController(
             $this->view,
             $this->session,
@@ -55,6 +58,7 @@ class IndexControllerTest extends TestCase {
             $this->flashMessages,
             $this->loginUrl,
             $this->entityId,
+            $this->collectorRegistry
         );
     }
 
@@ -62,7 +66,8 @@ class IndexControllerTest extends TestCase {
      * @covers ::index
      * @covers ::__construct
      */
-    public function testIndexThrowsExceptionOnMissingGateway() : void {
+    public function testIndexThrowsExceptionOnMissingGateway(): void
+    {
         $this->request
             ->expects($this->once())
             ->method('getQueryParams')
@@ -79,7 +84,8 @@ class IndexControllerTest extends TestCase {
     /**
      * @covers ::index
      */
-    public function testRedirectsIndexOnMissingUser() : void {
+    public function testRedirectsIndexOnMissingUser(): void
+    {
         $redirectResponse = $this->createMock(Response::class);
         $statusResponse = $this->createMock(Response::class);
         $statusResponse
