@@ -6,7 +6,10 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Naisdevice\Jita\Controllers\ApiController;
 use Naisdevice\Jita\Controllers\IndexController;
+use Naisdevice\Jita\Controllers\MetricsController;
 use Naisdevice\Jita\Controllers\SamlController;
+use Prometheus\CollectorRegistry;
+use Prometheus\Storage\APC;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -60,7 +63,19 @@ $container->set(IndexController::class, function (ContainerInterface $c) {
     /** @var FlashMessages */
     $flashMessages = $c->get(FlashMessages::class);
 
-    return new IndexController($twig, $session, $connection, $flashMessages, env('LOGIN_URL'), env('ISSUER_ENTITY_ID'));
+    /** @var CollectorRegistry */
+    $collectorRegistry = $c->get(CollectorRegistry::class);
+
+    return new IndexController($twig, $session, $connection, $flashMessages, env('LOGIN_URL'), env('ISSUER_ENTITY_ID'), $collectorRegistry);
+});
+$container->set(CollectorRegistry::class, function () {
+    return new CollectorRegistry(new APC(), false);
+});
+$container->set(MetricsController::class, function (ContainerInterface $c): MetricsController {
+    /** @var CollectorRegistry */
+    $collectorRegistry = $c->get(CollectorRegistry::class);
+
+    return new MetricsController($collectorRegistry);
 });
 $container->set(SamlController::class, function (ContainerInterface $c) {
     /** @var Session */
@@ -119,6 +134,7 @@ $app->get('/api/v1/gatewayAccess/{gateway}', ApiController::class . ':gatewayAcc
 $app->get('/api/v1/userAccess/{userId}', ApiController::class . ':userAccess');
 $app->get('/isAlive', fn (Request $request, Response $response): Response => $response);
 $app->get('/isReady', fn (Request $request, Response $response): Response => $response);
+$app->get('/metrics', MetricsController::class . ':metrics');
 
 // Run the app
 $app->run();

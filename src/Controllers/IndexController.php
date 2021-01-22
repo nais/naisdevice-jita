@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Naisdevice\Jita\FlashMessage;
 use Naisdevice\Jita\SamlRequest;
 use Naisdevice\Jita\Session;
+use Prometheus\CollectorRegistry;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
@@ -25,15 +26,17 @@ class IndexController
     private Messages $flashMessages;
     private string $loginUrl;
     private string $entityId;
+    private CollectorRegistry $collectorRegistry;
 
-    public function __construct(Twig $view, Session $session, Connection $connection, Messages $flashMessages, string $loginUrl, string $entityId)
+    public function __construct(Twig $view, Session $session, Connection $connection, Messages $flashMessages, string $loginUrl, string $entityId, CollectorRegistry $registry)
     {
-        $this->view          = $view;
-        $this->session       = $session;
-        $this->connection    = $connection;
-        $this->flashMessages = $flashMessages;
-        $this->loginUrl      = $loginUrl;
-        $this->entityId      = $entityId;
+        $this->view              = $view;
+        $this->session           = $session;
+        $this->connection        = $connection;
+        $this->flashMessages     = $flashMessages;
+        $this->loginUrl          = $loginUrl;
+        $this->entityId          = $entityId;
+        $this->collectorRegistry = $registry;
     }
 
     public function index(Request $request, Response $response): Response
@@ -154,6 +157,10 @@ class IndexController
         $now = new DateTimeImmutable('now', new DateTimeZone('UTC'));
 
         try {
+            $this->collectorRegistry
+                ->getOrRegisterCounter(MetricsController::NS, 'request_counter', 'number of jita requests', ['duration'])
+                ->incBy(1, [$duration]);
+
             $this->connection->insert('requests', [
                 'created'  => $now,
                 'user_id'  => $user->getObjectId(),
