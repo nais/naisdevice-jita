@@ -115,6 +115,12 @@ $app
         /** @var ContainerInterface */
         $container = $app->getContainer();
 
+        /** @var CollectorRegistry */
+        $collectorRegistry = $container->get(CollectorRegistry::class);
+        $collectorRegistry
+            ->getOrRegisterCounter(MetricsController::NS, 'error_counter', 'number of failed jita requests')
+            ->incBy(1);
+
         /** @var Twig */
         $twig = $container->get(Twig::class);
 
