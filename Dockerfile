@@ -13,6 +13,8 @@ FROM php:7.4-apache
 RUN apt-get update && \
     apt-get install -y libpq-dev && \
     docker-php-ext-install pdo_pgsql
+RUN pecl install apcu \
+    && docker-php-ext-enable apcu
 RUN a2enmod rewrite
 COPY --from=build /app/vendor/ /var/www/vendor/
 COPY templates/ /var/www/templates/
