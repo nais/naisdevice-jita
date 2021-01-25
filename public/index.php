@@ -138,9 +138,9 @@ $app->get('/saml/logout', SamlController::class . ':logout');
 $app->get('/api/v1/requests', ApiController::class . ':requests');
 $app->get('/api/v1/gatewayAccess/{gateway}', ApiController::class . ':gatewayAccess');
 $app->get('/api/v1/userAccess/{userId}', ApiController::class . ':userAccess');
+$app->get('/metrics', MetricsController::class . ':metrics');
 $app->get('/isAlive', fn (Request $request, Response $response): Response => $response);
 $app->get('/isReady', fn (Request $request, Response $response): Response => $response);
-$app->get('/metrics', MetricsController::class . ':metrics');
 
 // Run the app
 $app->run();
