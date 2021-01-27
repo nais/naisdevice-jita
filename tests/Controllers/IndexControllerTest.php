@@ -69,10 +69,27 @@ class IndexControllerTest extends TestCase
     }
 
     /**
+     * @return array<string,array{queryParams:array<string,?string>}>
+     */
+    public function getEmptyGatewayQueryParam(): array
+    {
+        return [
+            'null value' => [
+                'queryParams' => ['gateway' => null],
+            ],
+            'empty string' => [
+                'queryParams' => ['gateway' => ''],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getEmptyGatewayQueryParam
      * @covers ::index
      * @covers ::__construct
+     * @param array<string,?string> $queryParams
      */
-    public function testIndexThrowsExceptionOnMissingGateway(): void
+    public function testIndexThrowsExceptionOnMissingGateway(array $queryParams): void
     {
         $this->request
             ->expects($this->once())
@@ -83,7 +100,7 @@ class IndexControllerTest extends TestCase
             ->method('getGateway')
             ->willReturn(null);
 
-        $this->expectExceptionObject(new RuntimeException('Missing gateway'));
+        $this->expectExceptionObject(new RuntimeException('Missing gateway', 400));
         $this->controller->index($this->request, $this->response);
     }
 
