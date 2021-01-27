@@ -11,7 +11,7 @@
             {% if hasActiveAccessRequest %}
             <p>You currently have a valid access request for the <code class="text-nowrap">{{ gateway }}</code> gateway. You can revoke it below if you wish to create a new access request with a longer duration.</p>
             {% else %}
-            <p>You have requested elevated access to the <code class="text-nowrap">{{ gateway }}</code> gateway. Please state your business, and set the needed duration.</p>
+            <p>You have requested elevated access to the <code class="text-nowrap">{{ gateway }}</code> gateway. Please state your business, and set the needed duration. Keep in mind that you can revoke the access if you finish your task ahead of time.</p>
 
             <form method="post" action="/createRequest">
                 <input type="hidden" name="postToken" value="{{ postToken }}">
