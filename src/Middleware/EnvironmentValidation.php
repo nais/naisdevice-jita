@@ -47,7 +47,7 @@ class EnvironmentValidation
         }
 
         if (!empty($missing)) {
-            throw new RuntimeException(sprintf('Missing required environment variable(s): %s', join(', ', $missing)));
+            throw new RuntimeException(sprintf('Missing required environment variable(s): %s', join(', ', $missing)), 500);
         }
 
         return $handler->handle($request);
