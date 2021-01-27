@@ -262,6 +262,32 @@ class IndexControllerTest extends TestCase
     }
 
     /**
+     * @covers ::index
+     */
+    public function testIndexThrowsExceptionWhenUnableToFetchAuditLog(): void
+    {
+        $this->request
+            ->expects($this->once())
+            ->method('getQueryParams')
+            ->willReturn(['gateway' => 'some-gw']);
+
+        $this->session
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($this->createConfiguredMock(User::class, [
+                'getObjectId' => 'user-object-id',
+            ]));
+
+        $this->connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->willThrowException($this->createMock(DriverException::class));
+
+        $this->expectExceptionObject(new RuntimeException('Unable to fetch previous access requests.', 500));
+        $this->controller->index($this->request, $this->response);
+    }
+
+    /**
      * @covers ::createRequest
      */
     public function testCreateRequestRedirectsWhenThereIsNoUser(): void
