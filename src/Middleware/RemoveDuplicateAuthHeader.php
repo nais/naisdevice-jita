@@ -4,7 +4,6 @@ namespace Naisdevice\Jita\Middleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
-use RuntimeException;
 
 class RemoveDuplicateAuthHeader
 {
@@ -13,7 +12,6 @@ class RemoveDuplicateAuthHeader
      *
      * @param Request $request
      * @param RequestHandler $handler
-     * @throws RuntimeException
      * @return Response
      */
     public function __invoke(Request $request, RequestHandler $handler): Response

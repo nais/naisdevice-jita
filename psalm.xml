@@ -28,6 +28,11 @@
                 <file name="src/Controllers/ApiController.php"/>
             </errorLevel>
         </RedundantCastGivenDocblockType>
+        <UnusedClosureParam>
+            <errorLevel type="suppress">
+                <file name="public/index.php"/>
+            </errorLevel>
+        </UnusedClosureParam>
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>

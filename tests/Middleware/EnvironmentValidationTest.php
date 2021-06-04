@@ -41,7 +41,7 @@ class EnvironmentValidationTest extends TestCase
      */
     public function testFailsOnMissingValue(array $vars, string $error): void
     {
-        $this->expectExceptionObject(new RuntimeException($error));
+        $this->expectExceptionObject(new RuntimeException($error, 500));
         (new EnvironmentValidation($vars))(
             $this->createMock(ServerRequestInterface::class),
             $this->createMock(RequestHandlerInterface::class)

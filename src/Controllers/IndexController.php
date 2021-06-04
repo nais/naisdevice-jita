@@ -39,6 +39,14 @@ class IndexController
         $this->collectorRegistry = $registry;
     }
 
+    /**
+     * Main page
+     *
+     * @param Request $request
+     * @param Response $response
+     * @throws RuntimeException
+     * @return Response
+     */
     public function index(Request $request, Response $response): Response
     {
         /** @var array<string,mixed> */
@@ -46,8 +54,8 @@ class IndexController
         $gateway = array_key_exists('gateway', $query) ? (string) $query['gateway'] : $this->session->getGateway();
         $user    = $this->session->getUser();
 
-        if (null === $gateway) {
-            throw new RuntimeException('Missing gateway');
+        if (null === $gateway || '' === $gateway) {
+            throw new RuntimeException('Missing gateway, please click on the gateway you want access to in the naisdevice application.', 400);
         }
 
         $this->session->setGateway($gateway);
@@ -69,6 +77,15 @@ class IndexController
 
         $now = new DateTime('now', new DateTimeZone('UTC'));
 
+        try {
+            $requests = $this->connection->fetchAllAssociative(
+                'SELECT id, created, gateway, reason, expires, revoked FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
+                ['user_id' => $user->getObjectId()],
+            );
+        } catch (DriverException $e) {
+            throw new RuntimeException('Unable to fetch previous access requests.', 500, $e);
+        }
+
         return $this->view->render($response, 'index.html', [
             'hasActiveAccessRequest' => $this->userHasAccessToGateway($user->getObjectId(), $gateway),
             'postToken'              => $postToken,
@@ -84,13 +101,17 @@ class IndexController
                 'revoked'    => $r['revoked'],
                 'hasExpired' => new DateTime((string) $r['expires'], new DateTimeZone('UTC')) < $now,
                 'isRevoked'  => null !== $r['revoked'],
-            ], $this->connection->fetchAllAssociative(
-                'SELECT id, created, gateway, reason, expires, revoked FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
-                ['user_id' => $user->getObjectId()],
-            )),
+            ], $requests),
         ]);
     }
 
+    /**
+     * Create an access request
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function createRequest(Request $request, Response $response): Response
     {
         $user      = $this->session->getUser();
@@ -162,11 +183,11 @@ class IndexController
                 ->incBy(1, [$duration, $gateway]);
 
             $this->connection->insert('requests', [
-                'created'  => $now,
-                'user_id'  => $user->getObjectId(),
-                'gateway'  => $gateway,
-                'reason'   => $reason,
-                'expires'  => $now->add(new DateInterval(sprintf('PT%dH', $duration))),
+                'created' => $now,
+                'user_id' => $user->getObjectId(),
+                'gateway' => $gateway,
+                'reason'  => $reason,
+                'expires' => $now->add(new DateInterval(sprintf('PT%dH', $duration))),
             ], [
                 Types::DATETIMETZ_IMMUTABLE,
                 Types::STRING,
@@ -195,6 +216,13 @@ class IndexController
             ->withHeader('Location', '/');
     }
 
+    /**
+     * Create an access request
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function revokeAccess(Request $request, Response $response): Response
     {
         $user      = $this->session->getUser();

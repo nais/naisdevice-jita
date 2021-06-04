@@ -188,7 +188,7 @@ class SamlControllerTest extends TestCase
         $body
             ->expects($this->once())
             ->method('write')
-            ->with('Missing objectidentifier claim');
+            ->with('Missing objectidentifier claim.');
 
         $response1 = $this->createConfiguredMock(Response::class, ['getBody' => $body]);
         $response1
@@ -222,7 +222,7 @@ class SamlControllerTest extends TestCase
         $body
             ->expects($this->once())
             ->method('write')
-            ->with('Missing givenname claim');
+            ->with('Missing givenname claim.');
 
         $response1 = $this->createConfiguredMock(Response::class, ['getBody' => $body]);
         $response1
@@ -256,7 +256,7 @@ class SamlControllerTest extends TestCase
         $body
             ->expects($this->once())
             ->method('write')
-            ->with('Missing emailaddress claim');
+            ->with('Missing emailaddress claim.');
 
         $response1 = $this->createConfiguredMock(Response::class, ['getBody' => $body]);
         $response1
@@ -337,7 +337,7 @@ class SamlControllerTest extends TestCase
         $body
             ->expects($this->once())
             ->method('write')
-            ->with('Unable to load XML');
+            ->with('Unable to load XML.');
 
         $response1 = $this->createConfiguredMock(Response::class, ['getBody' => $body]);
         $response1

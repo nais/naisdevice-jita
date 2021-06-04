@@ -78,7 +78,7 @@ class SamlController
         $document = new DOMDocument();
 
         if (false === $document->loadXML($xml, LIBXML_NOERROR)) {
-            throw new InvalidArgumentException('Unable to load XML');
+            throw new InvalidArgumentException('Unable to load XML.', 400);
         }
 
         $xpath = new DOMXPath($document);
@@ -87,19 +87,19 @@ class SamlController
         $objectId = (string) $xpath->evaluate('string(//a:Attribute[@Name="http://schemas.microsoft.com/identity/claims/objectidentifier"]/a:AttributeValue)');
 
         if (empty($objectId)) {
-            throw new InvalidArgumentException('Missing objectidentifier claim');
+            throw new InvalidArgumentException('Missing objectidentifier claim.', 400);
         }
 
         $email = (string) $xpath->evaluate('string(//a:Attribute[@Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]/a:AttributeValue)');
 
         if (empty($email)) {
-            throw new InvalidArgumentException('Missing emailaddress claim');
+            throw new InvalidArgumentException('Missing emailaddress claim.', 400);
         }
 
         $givenName = (string) $xpath->evaluate('string(//a:Attribute[@Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"]/a:AttributeValue)');
 
         if (empty($givenName)) {
-            throw new InvalidArgumentException('Missing givenname claim');
+            throw new InvalidArgumentException('Missing givenname claim.', 400);
         }
 
         /** @var DOMNodeList<DOMNode> */
@@ -113,6 +113,13 @@ class SamlController
         return new User($objectId, $email, $givenName, $groups);
     }
 
+    /**
+     * Destroy the current session
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function logout(Request $request, Response $response): Response
     {
         $this->session->destroy();

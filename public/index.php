@@ -124,8 +124,16 @@ $app
         /** @var Twig */
         $twig = $container->get(Twig::class);
 
-        return $twig->render($app->getResponseFactory()->createResponse(500), 'error.html', [
-            'errorMessage' => $displayErrorDetails ? $exception->getMessage() : 'An error occurred',
+        $statusCode = 500;
+        $exceptionCode = (int) $exception->getCode();
+
+        if ($exceptionCode >= 400 && $exceptionCode < 600) {
+            // Use the code from the exception if it is in the 400-599 range
+            $statusCode = $exceptionCode;
+        }
+
+        return $twig->render($app->getResponseFactory()->createResponse($statusCode), 'error.html', [
+            'errorMessage' => $exception->getMessage(),
         ]);
     });
 

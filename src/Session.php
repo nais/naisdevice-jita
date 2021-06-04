@@ -2,23 +2,9 @@
 namespace Naisdevice\Jita;
 
 use Naisdevice\Jita\Session\User;
-use RuntimeException;
 
 class Session
 {
-    private int $cookieLifetime;
-
-    /**
-     * Class constructor
-     *
-     * @codeCoverageIgnore
-     * @param int $cookieLifetime Lifetime of the session cookie, in seconds
-     */
-    public function __construct(int $cookieLifetime = 3600)
-    {
-        $this->cookieLifetime = $cookieLifetime;
-    }
-
     /**
      * Start the session
      *
@@ -27,9 +13,7 @@ class Session
      */
     public function start(): self
     {
-        session_start([
-            'cookie_lifetime' => $this->cookieLifetime,
-        ]);
+        session_start();
 
         return $this;
     }
@@ -38,7 +22,6 @@ class Session
      * Set a user object
      *
      * @param User $user
-     * @throws RuntimeException
      * @return void
      */
     public function setUser(User $user): void
