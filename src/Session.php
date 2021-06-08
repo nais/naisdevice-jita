@@ -6,19 +6,6 @@ use Naisdevice\Jita\Session\User;
 class Session
 {
     /**
-     * Start the session
-     *
-     * @codeCoverageIgnore
-     * @return self
-     */
-    public function start(): self
-    {
-        session_start();
-
-        return $this;
-    }
-
-    /**
      * Set a user object
      *
      * @param User $user
@@ -99,17 +86,14 @@ class Session
     }
 
     /**
-     * Destroy the current session
+     * End the current session
      *
      * @codeCoverageIgnore
-     * @return self
+     * @return void
      */
-    public function destroy(): self
+    public function end(): void
     {
-        unset($_SESSION);
-
+        $_SESSION = [];
         setcookie((string) session_name(), '', time() - 42000);
-
-        return $this;
     }
 }

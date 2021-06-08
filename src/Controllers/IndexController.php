@@ -123,7 +123,7 @@ class IndexController
         $duration  = array_key_exists('duration', $params) ? (int) $params['duration'] : 0;
 
         if (null === $user) {
-            $this->session->destroy();
+            $this->session->end();
             return $response
                 ->withStatus(302)
                 ->withHeader('Location', '/');
@@ -233,7 +233,7 @@ class IndexController
         $error     = false;
 
         if (null === $user) {
-            $this->session->destroy();
+            $this->session->end();
             return $response
                 ->withStatus(302)
                 ->withHeader('Location', '/');
