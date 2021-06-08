@@ -2,8 +2,6 @@
 namespace Naisdevice\Jita\Controllers;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\PDO\Statement;
-use Doctrine\DBAL\Query\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -68,44 +66,23 @@ class ApiControllerTest extends TestCase
 
     /**
      * @covers ::gatewayAccess
-     * @covers ::getAccessRows
+     * @covers ::getAccessRowsWithTtl
      */
     public function testCanGetGatewayAccess(): void
     {
-        $queryBuilder = $this->createConfiguredMock(QueryBuilder::class, [
-            'select'   => $this->returnSelf(),
-            'from'     => $this->returnSelf(),
-            'andWhere' => $this->returnSelf(),
-            'execute'  => $this->createConfiguredMock(Statement::class, [
-                'fetchAllAssociative' => [
-                    [
-                        'user_id' => 'abc-123',
-                        'gateway' => 'some-gw',
-                        'expires' => '2040-11-23 10:07:34+00',
-                    ],
-                    [
-                        'user_id' => 'abc-456',
-                        'gateway' => 'some-gw',
-                        'expires' => '2040-11-23 10:07:34+00',
-                    ],
-                ],
-            ]),
-        ]);
-
-        $queryBuilder
-            ->expects($this->once())
-            ->method('where')
-            ->with('gateway = ?')
-            ->willReturnSelf();
-
-        $queryBuilder
-            ->expects($this->once())
-            ->method('setParameter')
-            ->with(0, 'some-gw')
-            ->willReturnSelf();
-
         $connection = $this->createConfiguredMock(Connection::class, [
-            'createQueryBuilder' => $queryBuilder,
+            'fetchAllAssociative' => [
+                [
+                    'user_id' => 'abc-123',
+                    'gateway' => 'some-gw',
+                    'expires' => '2040-11-23 10:07:34+00',
+                ],
+                [
+                    'user_id' => 'abc-456',
+                    'gateway' => 'some-gw',
+                    'expires' => '2040-11-23 10:07:34+00',
+                ],
+            ],
         ]);
 
         $modifiedResponse = $this->createMock(Response::class);
@@ -154,44 +131,23 @@ class ApiControllerTest extends TestCase
 
     /**
      * @covers ::userAccess
-     * @covers ::getAccessRows
+     * @covers ::getAccessRowsWithTtl
      */
     public function testCanGetUserAccess(): void
     {
-        $queryBuilder = $this->createConfiguredMock(QueryBuilder::class, [
-            'select'   => $this->returnSelf(),
-            'from'     => $this->returnSelf(),
-            'andWhere' => $this->returnSelf(),
-            'execute'  => $this->createConfiguredMock(Statement::class, [
-                'fetchAllAssociative' => [
-                    [
-                        'user_id' => 'abc-123',
-                        'gateway' => 'some-gw-1',
-                        'expires' => '2040-11-23 10:07:34+00',
-                    ],
-                    [
-                        'user_id' => 'abc-123',
-                        'gateway' => 'some-gw-2',
-                        'expires' => '2040-11-23 10:07:34+00',
-                    ],
-                ],
-            ]),
-        ]);
-
-        $queryBuilder
-            ->expects($this->once())
-            ->method('where')
-            ->with('user_id = ?')
-            ->willReturnSelf();
-
-        $queryBuilder
-            ->expects($this->once())
-            ->method('setParameter')
-            ->with(0, 'abc-123')
-            ->willReturnSelf();
-
         $connection = $this->createConfiguredMock(Connection::class, [
-            'createQueryBuilder' => $queryBuilder,
+            'fetchAllAssociative' => [
+                [
+                    'user_id' => 'abc-123',
+                    'gateway' => 'some-gw-1',
+                    'expires' => '2040-11-23 10:07:34+00',
+                ],
+                [
+                    'user_id' => 'abc-123',
+                    'gateway' => 'some-gw-2',
+                    'expires' => '2040-11-23 10:07:34+00',
+                ],
+            ],
         ]);
 
         $modifiedResponse = $this->createMock(Response::class);
