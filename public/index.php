@@ -31,6 +31,7 @@ $sessionHandler = new SessionHandler($connection);
 
 session_set_save_handler($sessionHandler);
 session_set_cookie_params([
+    'domain'   => (string) $_SERVER['HTTP_HOST'],
     'secure'   => true,
     'httponly' => true,
     'samesite' => 'None',
