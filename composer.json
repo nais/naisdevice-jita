@@ -41,9 +41,6 @@
   },
   "require-dev": {
     "navikt/coding-standard": "^1.0",
-    "phpstan/extension-installer": "^1.0",
-    "phpstan/phpstan": "^0.12",
-    "phpstan/phpstan-phpunit": "^0.12",
     "phpunit/phpunit": "^9.2",
     "psalm/plugin-phpunit": "^0.16.0",
     "vimeo/psalm": "^4.1"
@@ -54,11 +51,7 @@
     "test:coverage": "@phpunit:coverage",
     "phpunit": "vendor/bin/phpunit",
     "phpunit:coverage": "vendor/bin/phpunit --coverage-html build/coverage --coverage-text",
-    "sa": [
-      "@phpstan",
-      "@psalm"
-    ],
-    "phpstan": "vendor/bin/phpstan analyse",
+    "sa": "@psalm",
     "psalm": "vendor/bin/psalm --no-cache --show-info=true",
     "cs": "php-cs-fixer fix --dry-run --diff --diff-format udiff",
     "ci": [
