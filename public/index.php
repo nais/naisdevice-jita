@@ -30,6 +30,11 @@ $connection = DriverManager::getConnection(['url' => env('DB_URL')]);
 $sessionHandler = new SessionHandler($connection);
 
 session_set_save_handler($sessionHandler);
+session_set_cookie_params([
+    'secure'   => true,
+    'httponly' => true,
+    'samesite' => 'None',
+]);
 session_start();
 
 // Create and populate container

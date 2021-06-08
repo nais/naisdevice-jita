@@ -94,7 +94,16 @@ class Session
     public function end(): void
     {
         $_SESSION = [];
-        setcookie((string) session_name(), '', time() - 42000);
+        $params = session_get_cookie_params();
+        setcookie(
+            (string) session_name(),
+            '',
+            time() - 42000,
+            (string) $params['path'],
+            (string) $params['domain'],
+            (bool) $params['secure'],
+            (bool) $params['httponly'],
+        );
         session_destroy();
     }
 }
