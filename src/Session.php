@@ -95,5 +95,6 @@ class Session
     {
         $_SESSION = [];
         setcookie((string) session_name(), '', time() - 42000);
+        session_destroy();
     }
 }
