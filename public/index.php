@@ -26,11 +26,17 @@ require __DIR__ . '/../vendor/autoload.php';
 
 define('DEBUG', '1' === env('DEBUG'));
 
+$connection = DriverManager::getConnection(['url' => env('DB_URL')]);
+$sessionHandler = new SessionHandler($connection);
+
+session_set_save_handler($sessionHandler);
+session_start();
+
 // Create and populate container
 $container = new Container();
-$container->set(Connection::class, fn () => DriverManager::getConnection([
-    'url' => env('DB_URL'),
-]));
+$container->set(Connection::class, $connection);
+$container->set(SessionHandler::class, $sessionHandler);
+$container->set(Session::class, fn () => new Session());
 $container->set(Twig::class, function () {
     $twig = Twig::create(__DIR__ . '/../templates', [
         'debug' => DEBUG,
@@ -47,8 +53,7 @@ $container->set(Twig::class, function () {
 
     return $twig;
 });
-$container->set(Session::class, (new Session())->start());
-$container->set(FlashMessages::class, new FlashMessages()); // Must be initialized after the session entry on the line above
+$container->set(FlashMessages::class, fn () => new FlashMessages());
 $container->set(SamlResponseValidator::class, fn () => new SamlResponseValidator(env('SAML_CERT')));
 $container->set(IndexController::class, function (ContainerInterface $c) {
     /** @var Twig */
