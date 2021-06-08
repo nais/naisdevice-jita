@@ -159,6 +159,10 @@ $app->get('/api/v1/userAccess/{userId}', ApiController::class . ':userAccess');
 $app->get('/metrics', MetricsController::class . ':metrics');
 $app->get('/isAlive', fn (Request $request, Response $response): Response => $response);
 $app->get('/isReady', fn (Request $request, Response $response): Response => $response);
+$app->get('/d', function (Request $request, Response $response) {
+    $response->getBody()->write(print_r($_SERVER, true));
+    return $response;
+});
 
 // Run the app
 $app->run();
