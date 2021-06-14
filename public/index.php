@@ -36,7 +36,9 @@ session_set_cookie_params([
     'httponly' => true,
     'samesite' => 'None',
 ]);
-session_start();
+session_start([
+    'name' => 'jita-session-id',
+]);
 
 // Create and populate container
 $container = new Container();
