@@ -33,6 +33,11 @@
                 <file name="public/index.php"/>
             </errorLevel>
         </UnusedClosureParam>
+        <ImplementedReturnTypeMismatch>
+            <errorLevel type="suppress">
+                <file name="src/SessionHandler.php"/>
+            </errorLevel>
+        </ImplementedReturnTypeMismatch>
     </issueHandlers>
     <plugins>
         <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>

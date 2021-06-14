@@ -23,7 +23,7 @@ class SamlControllerTest extends TestCase
         $session = $this->createMock(Session::class);
         $session
             ->expects($this->once())
-            ->method('destroy');
+            ->method('end');
 
         $response2 = $this->createMock(Response::class);
         $response2

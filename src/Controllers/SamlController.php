@@ -122,7 +122,7 @@ class SamlController
      */
     public function logout(Request $request, Response $response): Response
     {
-        $this->session->destroy();
+        $this->session->end();
 
         return $response
             ->withHeader('Location', $this->logoutUrl)

@@ -299,7 +299,7 @@ class IndexControllerTest extends TestCase
 
         $this->session
             ->expects($this->once())
-            ->method('destroy');
+            ->method('end');
 
         $redirectResponse = $this->createMock(Response::class);
 
@@ -335,7 +335,7 @@ class IndexControllerTest extends TestCase
 
         $this->session
             ->expects($this->never())
-            ->method('destroy');
+            ->method('end');
 
         $redirectResponse = $this->createMock(Response::class);
 

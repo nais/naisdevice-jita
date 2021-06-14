@@ -4,7 +4,6 @@ namespace Naisdevice\Jita\Controllers;
 use DateTime;
 use DateTimeZone;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Driver\PDO\Statement;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
@@ -26,9 +25,11 @@ class ApiController
             'expires' => $row['expires'],
             'revoked' => $row['revoked'],
             'reason'  => $row['reason'],
-        ], $this->connection->fetchAllAssociative(
-            'SELECT created, gateway, user_id, expires, reason, revoked FROM requests ORDER BY id DESC',
-        ))]));
+        ], $this->connection->fetchAllAssociative(<<<SQL
+            SELECT created, gateway, user_id, expires, reason, revoked
+            FROM requests
+            ORDER BY id DESC
+        SQL))]));
 
         return $response->withHeader('Content-Type', 'application/json');
     }
@@ -42,7 +43,18 @@ class ApiController
      */
     public function gatewayAccess(Request $request, Response $response, array $params): Response
     {
-        $rows = $this->getAccessRows('gateway = ?', $params['gateway']);
+        /** @var array<int,array{user_id:string,gateway:string,expires:string}> */
+        $rows = $this->connection->fetchAllAssociative(<<<SQL
+            SELECT user_id, gateway, expires
+            FROM requests
+            WHERE gateway = :gateway
+            AND expires > NOW()
+            AND revoked IS NULL
+            ORDER BY id DESC
+        SQL, [
+            'gateway' => $params['gateway'],
+        ]);
+        $rows = $this->getAccessRowsWithTtl($rows);
         $response->getBody()->write((string) json_encode($rows));
 
         return $response->withHeader('Content-Type', 'application/json');
@@ -57,7 +69,18 @@ class ApiController
      */
     public function userAccess(Request $request, Response $response, array $params): Response
     {
-        $rows = $this->getAccessRows('user_id = ?', (string) $params['userId']);
+        /** @var array<int,array{user_id:string,gateway:string,expires:string}> */
+        $rows = $this->connection->fetchAllAssociative(<<<SQL
+            SELECT user_id, gateway, expires
+            FROM requests
+            WHERE user_id = :user_id
+            AND expires > NOW()
+            AND revoked IS NULL
+            ORDER BY id DESC
+        SQL, [
+            'user_id' => $params['userId'],
+        ]);
+        $rows = $this->getAccessRowsWithTtl($rows);
         $response->getBody()->write((string) json_encode($rows));
 
         return $response->withHeader('Content-Type', 'application/json');
@@ -66,32 +89,19 @@ class ApiController
     /**
      * Get access rows
      *
-     * @param string $where Extra WHERE clause
-     * @param string $param Parameter used in the WHERE clause
+     * @param array<int,array{user_id:string,gateway:string,expires:string}> $rows
      * @return array<int,array{user_id:string,gateway:string,expires:string,ttl:int}>
      */
-    private function getAccessRows(string $where, string $param): array
+    private function getAccessRowsWithTtl(array $rows): array
     {
-        /** @var Statement */
-        $stmt = $this->connection
-            ->createQueryBuilder()
-            ->select(['user_id', 'gateway', 'expires'])
-            ->from('requests')
-            ->where($where)
-            ->andWhere('expires > NOW()')
-            ->andWhere('revoked IS NULL')
-            ->setParameter(0, $param)
-            ->execute();
-
-        /** @var array<int,array{user_id:string,gateway:string,expires:string}> */
-        $rows = $stmt->fetchAllAssociative();
+        $now = (new DateTime('now', new DateTimeZone('UTC')))->getTimestamp();
 
         /** @var array<int,array{user_id:string,gateway:string,expires:string,ttl:int}> */
         return array_map(fn (array $row): array => [
             'user_id' => $row['user_id'],
             'gateway' => $row['gateway'],
             'expires' => $row['expires'],
-            'ttl'     => (new DateTime((string) $row['expires']))->getTimestamp() - (new DateTime('now', new DateTimeZone('UTC')))->getTimestamp(),
+            'ttl'     => (new DateTime((string) $row['expires']))->getTimestamp() - $now,
         ], $rows);
     }
 }

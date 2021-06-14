@@ -78,10 +78,15 @@ class IndexController
         $now = new DateTime('now', new DateTimeZone('UTC'));
 
         try {
-            $requests = $this->connection->fetchAllAssociative(
-                'SELECT id, created, gateway, reason, expires, revoked FROM requests WHERE user_id = :user_id ORDER BY id DESC LIMIT 10',
-                ['user_id' => $user->getObjectId()],
-            );
+            $requests = $this->connection->fetchAllAssociative(<<<SQL
+                SELECT id, created, gateway, reason, expires, revoked
+                FROM requests
+                WHERE user_id = :user_id
+                ORDER BY id DESC
+                LIMIT 10
+            SQL, [
+                'user_id' => $user->getObjectId(),
+            ]);
         } catch (DriverException $e) {
             throw new RuntimeException('Unable to fetch previous access requests.', 500, $e);
         }
@@ -123,7 +128,7 @@ class IndexController
         $duration  = array_key_exists('duration', $params) ? (int) $params['duration'] : 0;
 
         if (null === $user) {
-            $this->session->destroy();
+            $this->session->end();
             return $response
                 ->withStatus(302)
                 ->withHeader('Location', '/');
@@ -233,7 +238,7 @@ class IndexController
         $error     = false;
 
         if (null === $user) {
-            $this->session->destroy();
+            $this->session->end();
             return $response
                 ->withStatus(302)
                 ->withHeader('Location', '/');
@@ -308,9 +313,16 @@ class IndexController
      */
     private function userHasAccessToGateway(string $userId, string $gateway): bool
     {
-        return false !== $this->connection->fetchOne(
-            'SELECT id FROM requests WHERE user_id = :user_id AND gateway = :gateway AND expires > NOW() AND revoked IS NULL',
-            ['user_id' => $userId, 'gateway' => $gateway],
-        );
+        return false !== $this->connection->fetchOne(<<<SQL
+            SELECT id
+            FROM requests
+            WHERE user_id = :user_id
+            AND gateway = :gateway
+            AND expires > NOW()
+            AND revoked IS NULL
+        SQL, [
+            'user_id' => $userId,
+            'gateway' => $gateway,
+        ]);
     }
 }
