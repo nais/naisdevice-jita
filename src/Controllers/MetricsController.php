@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 class MetricsController
 {
-    const NS = 'jita';
+    public const NS = 'jita';
 
     private CollectorRegistry $collectorRegistry;
 

@@ -40,22 +40,20 @@
     "tuupola/slim-basic-auth": "^3.3"
   },
   "require-dev": {
-    "navikt/coding-standard": "^1.0",
+    "navikt/coding-standard": "^2.0",
     "phpunit/phpunit": "^9.2",
     "psalm/plugin-phpunit": "^0.16.0",
     "vimeo/psalm": "^4.1"
   },
   "scripts": {
-    "lint": "for file in `git ls-files '*.php'`; do php -l $file; done",
     "test": "@phpunit",
     "test:coverage": "@phpunit:coverage",
     "phpunit": "vendor/bin/phpunit",
     "phpunit:coverage": "vendor/bin/phpunit --coverage-html build/coverage --coverage-text",
     "sa": "@psalm",
     "psalm": "vendor/bin/psalm --no-cache --show-info=true",
-    "cs": "php-cs-fixer fix --dry-run --diff --diff-format udiff",
+    "cs": "php-cs-fixer fix --dry-run --diff",
     "ci": [
-      "@lint",
       "@test",
       "@sa",
       "@cs"
