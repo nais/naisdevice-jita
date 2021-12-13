@@ -23,4 +23,8 @@ COPY src/ /var/www/src/
 COPY public/ /var/www/html/
 COPY entrypoint-wrapper.sh /usr/local/bin/entrypoint-wrapper
 
+RUN sed -i "s/80/8080/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
+
+EXPOSE 8080
+
 ENTRYPOINT [ "entrypoint-wrapper" ]
