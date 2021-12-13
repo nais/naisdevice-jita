@@ -10,8 +10,8 @@ use RuntimeException;
 
 class DatabaseMigrations
 {
-    const MIGRATION_ERROR   = 1;
-    const MIGRATION_SUCCESS = 0;
+    public const MIGRATION_ERROR   = 1;
+    public const MIGRATION_SUCCESS = 0;
 
     private Connection $connection;
     private Logger $logger;

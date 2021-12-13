@@ -41,13 +41,13 @@ jobs:
         run: composer install
 
       - name: Run unit tests
-        run: composer run test
+        run: vendor/bin/phpunit
 
       - name: Run static analysis
-        run: composer run sa
+        run: vendor/bin/psalm --no-cache --show-info=true
 
       - name: Check coding standard
-        run: composer run cs
+        run: php-cs-fixer fix --dry-run --diff
 
   build:
     name: Build docker container

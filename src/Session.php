@@ -51,7 +51,7 @@ class Session
      */
     public function getPostToken(): ?string
     {
-        return array_key_exists('postToken', $_SESSION) ? (string) $_SESSION['postToken'] : null;
+        return array_key_exists('postToken', $_SESSION ?? []) ? (string) $_SESSION['postToken'] : null;
     }
 
     /**
@@ -72,7 +72,7 @@ class Session
      */
     public function getGateway(): ?string
     {
-        return array_key_exists('gateway', $_SESSION) ? (string) $_SESSION['gateway'] : null;
+        return array_key_exists('gateway', $_SESSION ?? []) ? (string) $_SESSION['gateway'] : null;
     }
 
     /**
@@ -82,7 +82,7 @@ class Session
      */
     public function hasUser(): bool
     {
-        return array_key_exists('user', $_SESSION) && $_SESSION['user'] instanceof User;
+        return array_key_exists('user', $_SESSION ?? []) && $_SESSION['user'] instanceof User;
     }
 
     /**
