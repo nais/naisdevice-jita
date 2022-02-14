@@ -91,7 +91,7 @@ class ApiController
             $gateways[$gateway][] = $row;
         }
 
-        $response->getBody()->write((string) json_encode($gateways));
+        $response->getBody()->write((string) json_encode($gateways, JSON_FORCE_OBJECT));
 
         return $response->withHeader('Content-Type', 'application/json');
     }
