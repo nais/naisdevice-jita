@@ -6,6 +6,7 @@ use DateTimeZone;
 use Doctrine\DBAL\Connection;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use stdClass;
 
 class ApiController
 {
@@ -91,7 +92,7 @@ class ApiController
             $gateways[$gateway][] = $row;
         }
 
-        $response->getBody()->write((string) json_encode($gateways, JSON_FORCE_OBJECT));
+        $response->getBody()->write((string) json_encode($gateways ?: new stdClass()));
 
         return $response->withHeader('Content-Type', 'application/json');
     }
