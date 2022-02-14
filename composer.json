@@ -27,6 +27,7 @@
   },
   "require": {
     "php": "^7.4",
+    "ext-apcu": "*",
     "ext-pdo": "*",
     "doctrine/dbal": "^3.1",
     "monolog/monolog": "^2.1",
@@ -43,15 +44,13 @@
     "navikt/coding-standard": "^2.0",
     "phpunit/phpunit": "^9.2",
     "psalm/plugin-phpunit": "^0.16.0",
+    "symfony/var-dumper": "^5.4",
     "vimeo/psalm": "^4.1"
   },
   "scripts": {
-    "test": "@phpunit",
-    "test:coverage": "@phpunit:coverage",
-    "phpunit": "vendor/bin/phpunit",
-    "phpunit:coverage": "vendor/bin/phpunit --coverage-html build/coverage --coverage-text",
-    "sa": "@psalm",
-    "psalm": "vendor/bin/psalm --no-cache --show-info=true",
+    "test": "vendor/bin/phpunit",
+    "test:coverage": "vendor/bin/phpunit --coverage-html build/coverage --coverage-text",
+    "sa": "vendor/bin/psalm --no-cache --show-info=true",
     "cs": "php-cs-fixer fix --dry-run --diff",
     "ci": [
       "@test",

@@ -75,9 +75,10 @@ class SamlController
      */
     private function getUserFromSamlResponse(string $xml): User
     {
+        $xml = trim($xml);
         $document = new DOMDocument();
 
-        if (false === $document->loadXML($xml, LIBXML_NOERROR)) {
+        if (empty($xml) || false === $document->loadXML($xml, LIBXML_NOERROR)) {
             throw new InvalidArgumentException('Unable to load XML.', 400);
         }
 
@@ -107,7 +108,7 @@ class SamlController
         $groups     = [];
 
         foreach ($groupsNode as $group) {
-            $groups[] = $group->nodeValue;
+            $groups[] = (string) $group->nodeValue;
         }
 
         return new User($objectId, $email, $givenName, $groups);

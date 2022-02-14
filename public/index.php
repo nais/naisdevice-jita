@@ -50,7 +50,6 @@ $container->set(Twig::class, function () {
         'debug' => DEBUG,
     ]);
 
-    /** @var CoreExtension */
     $core = $twig->getEnvironment()->getExtension(CoreExtension::class);
     $core->setDateFormat('d/m/Y, H:i:s');
     $core->setTimezone('Europe/Oslo');
@@ -157,6 +156,7 @@ $app->post('/revokeAccess', IndexController::class . ':revokeAccess');
 $app->post('/saml/acs', SamlController::class . ':acs');
 $app->get('/saml/logout', SamlController::class . ':logout');
 $app->get('/api/v1/requests', ApiController::class . ':requests');
+$app->get('/api/v1/gatewaysAccess', ApiController::class . ':gatewaysAccess');
 $app->get('/api/v1/gatewayAccess/{gateway}', ApiController::class . ':gatewayAccess');
 $app->get('/api/v1/userAccess/{userId}', ApiController::class . ':userAccess');
 $app->get('/metrics', MetricsController::class . ':metrics');
