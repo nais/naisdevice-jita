@@ -61,6 +61,42 @@ class ApiController
     }
 
     /**
+     * Get gateway requests for all gateways
+     *
+     * @param Request $request
+     * @param Response $response
+     */
+    public function gatewaysAccess(Request $request, Response $response): Response
+    {
+        /** @var array<int,array{user_id:string,gateway:string,expires:string}> */
+        $rows = $this->connection->fetchAllAssociative(<<<SQL
+            SELECT user_id, gateway, expires
+            FROM requests
+            WHERE expires > NOW()
+            AND revoked IS NULL
+            ORDER BY id DESC
+        SQL);
+
+        $rows = $this->getAccessRowsWithTtl($rows);
+        $gateways = [];
+
+        foreach ($rows as $row) {
+            $gateway = $row['gateway'];
+
+            if (!array_key_exists($gateway, $gateways)) {
+                $gateways[$gateway] = [];
+            }
+
+            unset($row['gateway']);
+            $gateways[$gateway][] = $row;
+        }
+
+        $response->getBody()->write((string) json_encode($gateways));
+
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    /**
      * Get user requests
      *
      * @param Request $request

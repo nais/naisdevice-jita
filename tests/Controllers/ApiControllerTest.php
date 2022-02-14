@@ -130,6 +130,73 @@ class ApiControllerTest extends TestCase
     }
 
     /**
+     * @covers ::gatewaysAccess
+     * @covers ::getAccessRowsWithTtl
+     */
+    public function testCanGetGatewaysAccess(): void
+    {
+        $connection = $this->createConfiguredMock(Connection::class, [
+            'fetchAllAssociative' => [
+                [
+                    'user_id' => 'abc-123',
+                    'gateway' => 'some-gw',
+                    'expires' => '2040-11-23 10:07:34+00',
+                ],
+                [
+                    'user_id' => 'abc-456',
+                    'gateway' => 'some-gw',
+                    'expires' => '2040-11-23 10:07:34+00',
+                ],
+                [
+                    'user_id' => 'abc-123',
+                    'gateway' => 'some-other-gw',
+                    'expires' => '2040-11-23 10:07:34+00',
+                ],
+            ],
+        ]);
+
+        $modifiedResponse = $this->createMock(Response::class);
+
+        $body = $this->createMock(StreamInterface::class);
+        $body
+            ->expects($this->once())
+            ->method('write')
+            ->with($this->callback(function (string $json): bool {
+                /** @var array<string,array<array{user_id:string,gateway:string,expires:string,ttl?:mixed}>> */
+                $body = json_decode($json, true);
+
+                return
+                    2 === count($body) &&
+                    array_key_exists('some-gw', $body) &&
+                    array_key_exists('some-other-gw', $body) &&
+                    2 === count($body['some-gw']) &&
+                    1 === count($body['some-other-gw']) &&
+                    'abc-123' === $body['some-other-gw'][0]['user_id'] &&
+                    'abc-123' === $body['some-gw'][0]['user_id'] &&
+                    'abc-456' === $body['some-gw'][1]['user_id'];
+            }));
+
+        $request = $this->createMock(Request::class);
+        $response = $this->createConfiguredMock(Response::class, [
+            'getBody' => $body,
+        ]);
+
+        $response
+            ->expects($this->once())
+            ->method('withHeader')
+            ->with('Content-Type', 'application/json')
+            ->willReturn($modifiedResponse);
+
+        $this->assertSame(
+            $modifiedResponse,
+            (new ApiController($connection))->gatewaysAccess(
+                $request,
+                $response,
+            )
+        );
+    }
+
+    /**
      * @covers ::userAccess
      * @covers ::getAccessRowsWithTtl
      */
