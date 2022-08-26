@@ -4,6 +4,7 @@ namespace Naisdevice\Jita;
 use DI\Container;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Exception;
 use Naisdevice\Jita\Controllers\ApiController;
 use Naisdevice\Jita\Controllers\IndexController;
 use Naisdevice\Jita\Controllers\MetricsController;
@@ -28,7 +29,7 @@ define('DEBUG', '1' === env('DEBUG'));
 
 try {
     $connection = DriverManager::getConnection(['url' => env('DB_URL')]);
-} catch (\Exception $e) {
+} catch (Exception $e) {
     echo "Unable to connect to the database";
     exit;
 }
