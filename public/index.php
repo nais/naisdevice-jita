@@ -26,7 +26,13 @@ require __DIR__ . '/../vendor/autoload.php';
 
 define('DEBUG', '1' === env('DEBUG'));
 
-$connection = DriverManager::getConnection(['url' => env('DB_URL')]);
+try {
+    $connection = DriverManager::getConnection(['url' => env('DB_URL')]);
+} catch (\Exception $e) {
+    echo "Unable to connect to the database";
+    exit;
+}
+
 $sessionHandler = new SessionHandler($connection);
 
 session_set_save_handler($sessionHandler);
