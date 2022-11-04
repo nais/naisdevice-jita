@@ -30,7 +30,14 @@ define('DEBUG', '1' === env('DEBUG'));
 try {
     $connection = DriverManager::getConnection(['url' => env('DB_URL')]);
 } catch (Exception $e) {
-    echo "Unable to connect to the database";
+    http_response_code(503);
+    echo 'Unable to connect to the database';
+    exit;
+}
+
+if (empty($_SERVER['HTTP_HOST'])) {
+    http_response_code(500);
+    echo 'Internal server error';
     exit;
 }
 
@@ -38,7 +45,7 @@ $sessionHandler = new SessionHandler($connection);
 
 session_set_save_handler($sessionHandler);
 session_set_cookie_params([
-    'domain'   => (string) $_SERVER['HTTP_HOST'],
+    'domain'   => $_SERVER['HTTP_HOST'],
     'secure'   => true,
     'httponly' => true,
     'samesite' => 'None',
