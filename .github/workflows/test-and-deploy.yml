@@ -5,14 +5,14 @@ env:
 jobs:
   test:
     name: Run unit tests and static analysis
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.1'
           tools: php-cs-fixer
 
       - name: Output some debug information about the PHP version
@@ -27,9 +27,9 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: get-composer-cache-dir
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> ${GITHUB_OUTPUT}
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: composer-cache
         with:
           path: ${{ steps.get-composer-cache-dir.outputs.dir }}
@@ -51,10 +51,10 @@ jobs:
 
   build:
     name: Build docker container
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build and publish Docker image
         env:
@@ -69,9 +69,9 @@ jobs:
     needs:
       - test
       - build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: nais/deploy/actions/deploy@v1
         env:
@@ -86,9 +86,9 @@ jobs:
     needs:
       - test
       - build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: nais/deploy/actions/deploy@v1
         env:
