@@ -26,11 +26,11 @@
     }
   },
   "require": {
-    "php": "^7.4",
+    "php": "^8.1",
     "ext-apcu": "*",
     "ext-pdo": "*",
     "doctrine/dbal": "^3.1",
-    "monolog/monolog": "^2.1",
+    "monolog/monolog": "^3.0",
     "onelogin/php-saml": "^4.0",
     "php-di/slim-bridge": "^3.0",
     "promphp/prometheus_client_php": "^2.2",
@@ -43,8 +43,8 @@
   "require-dev": {
     "navikt/coding-standard": "^2.0",
     "phpunit/phpunit": "^9.2",
-    "psalm/plugin-phpunit": "^0.16.0",
-    "symfony/var-dumper": "^5.4",
+    "psalm/plugin-phpunit": "^0.18.3",
+    "symfony/var-dumper": "^6.1",
     "vimeo/psalm": "^4.1"
   },
   "scripts": {
