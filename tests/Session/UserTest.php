@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+
 namespace Naisdevice\Jita\Session;
 
 use PHPUnit\Framework\TestCase;
