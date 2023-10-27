@@ -3,8 +3,7 @@
     "DEBUG": 0
   },
   "ingresses": [
-    "https://naisdevice-jita.external.prod-gcp.nav.cloud.nais.io",
-    "https://naisdevice-jita.nais.io/"
+    "https://naisdevice-jita.external.prod-gcp.nav.cloud.nais.io"
   ],
   "db": {
     "cascadingDelete": false,
