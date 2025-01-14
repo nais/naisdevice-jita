@@ -6,6 +6,7 @@
     "https://naisdevice-jita.external.prod-gcp.nav.cloud.nais.io"
   ],
   "db": {
+    "tier": "db-custom-1-3840",
     "cascadingDelete": false,
     "highAvailability": true
   }

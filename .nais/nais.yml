@@ -49,6 +49,7 @@ spec:
     sqlInstances:
       - name: naisdevice-jita
         type: POSTGRES_12
+        tier: {{ db.tier }}
         cascadingDelete: {{ db.cascadingDelete }}
         highAvailability: {{ db.highAvailability }}
         databases:

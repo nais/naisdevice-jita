@@ -6,6 +6,7 @@
     "https://naisdevice-jita.intern.dev.nav.no"
   ],
   "db": {
+    "tier": "db-f1-micro",
     "cascadingDelete": true,
     "highAvailability": false
   }
