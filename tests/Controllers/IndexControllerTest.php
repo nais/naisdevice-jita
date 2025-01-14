@@ -72,7 +72,7 @@ class IndexControllerTest extends TestCase
     /**
      * @return array<string,array{queryParams:array<string,?string>}>
      */
-    public function getEmptyGatewayQueryParam(): array
+    public static function getEmptyGatewayQueryParam(): array
     {
         return [
             'null value' => [

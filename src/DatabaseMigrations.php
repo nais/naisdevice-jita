@@ -101,8 +101,11 @@ class DatabaseMigrations
             throw new InvalidArgumentException(sprintf('Not a directory: %s', $dir));
         }
 
-        /** @var string[] */
         $allFiles = scandir($dir, SCANDIR_SORT_ASCENDING);
+
+        if (false === $allFiles) {
+            throw new RuntimeException(sprintf('Unable to scan directory: %s', $dir));
+        }
 
         // Only keep specific files
         $migrationFiles = array_values(array_filter(

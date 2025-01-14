@@ -16,7 +16,7 @@ class EnvironmentValidationTest extends TestCase
     /**
      * @return array<string,array{0:array<string,string>,1:string}>
      */
-    public function getEnvVars(): array
+    public static function getEnvVars(): array
     {
         return [
             'no vars' => [

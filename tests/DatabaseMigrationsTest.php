@@ -3,7 +3,7 @@
 namespace Naisdevice\Jita;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Exception\InvalidArgumentException as DBALInvalidArgumentException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use InvalidArgumentException;
 use Monolog\Logger;
@@ -68,7 +68,7 @@ class DatabaseMigrationsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->willThrowException(new Exception('some error'));
+            ->willThrowException(new DBALInvalidArgumentException('some error'));
 
         $logger = $this->createMock(Logger::class);
         $logger
@@ -90,10 +90,18 @@ class DatabaseMigrationsTest extends TestCase
         $connection = $this->createConfiguredMock(Connection::class, [
             'fetchOne' => '1',
         ]);
+        $expects = $this->exactly(2);
         $connection
-            ->expects($this->exactly(2))
+            ->expects($expects)
             ->method('executeStatement')
-            ->withConsecutive(['second'], ['last']);
+            ->willReturnCallback(
+                fn (string $param): int =>
+                match ([$expects->numberOfInvocations(), $param]) {
+                    [1, 'second'] => 0,
+                    [2, 'last'] => 0,
+                    default => $this->fail("Unexpected parameter: " . $param)
+                },
+            );
         $logger = $this->createMock(Logger::class);
 
         $this->assertSame(0, (new DatabaseMigrations($connection, __DIR__ . '/fixtures/schemas', $logger))->migrate());
@@ -109,14 +117,24 @@ class DatabaseMigrationsTest extends TestCase
         $connection = $this->createConfiguredMock(Connection::class, [
             'fetchOne' => false,
         ]);
+        $expects = $this->exactly(2);
         $connection
-            ->expects($this->exactly(2))
+            ->expects($expects)
             ->method('executeStatement')
-            ->withConsecutive(['first'], ['second'])
-            ->willReturnOnConsecutiveCalls(
-                null,
-                $this->throwException(new Exception('some error')),
-            );
+            ->willReturnCallback(function (string $param) use ($expects): int {
+                $i = $expects->numberOfInvocations();
+                if ($i === 1) {
+                    $this->assertSame('first', $param);
+                    return 0;
+                }
+
+                if ($i === 2) {
+                    $this->assertSame('second', $param);
+                    throw new DBALInvalidArgumentException('some error');
+                }
+
+                $this->fail("Unexpected parameter: " . $param);
+            });
         $logger = $this->createMock(Logger::class);
         $logger
             ->expects($this->once())

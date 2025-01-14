@@ -13,7 +13,7 @@ class SamlRequestTest extends TestCase
     /**
      * @return array<int,array{issuer:string}>
      */
-    public function getSamlRequestParams(): array
+    public static function getSamlRequestParams(): array
     {
         return [
             [
