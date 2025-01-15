@@ -6,6 +6,7 @@
     "https://naisdevice-jita.intern.dev.nav.no"
   ],
   "db": {
+    "version": "POSTGRES_15",
     "tier": "db-f1-micro",
     "cascadingDelete": true,
     "highAvailability": false
