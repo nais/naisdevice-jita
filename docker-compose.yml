@@ -1,8 +1,6 @@
-version: '3.1'
 services:
   postgres:
-    image: postgres
-    restart: always
+    image: postgres:12-alpine
     environment:
       POSTGRES_DB: jita
       POSTGRES_USER: jita
@@ -17,7 +15,6 @@ services:
     depends_on:
       - postgres
     image: adminer:latest
-    restart: always
     ports:
       - 8081:8080
     environment:
