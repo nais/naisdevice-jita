@@ -2,6 +2,7 @@
 
 namespace Naisdevice\Jita\Controllers;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Prometheus\CollectorRegistry;
 use Prometheus\MetricFamilySamples;
@@ -9,15 +10,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\Controllers\MetricsController
- */
+#[CoversClass(MetricsController::class)]
 class MetricsControllerTest extends TestCase
 {
-    /**
-     * @covers ::__construct
-     * @covers ::metrics
-     */
     public function testMetrics(): void
     {
         $registry = $this->createMock(CollectorRegistry::class);

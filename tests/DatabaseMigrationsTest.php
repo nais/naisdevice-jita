@@ -7,28 +7,18 @@ use Doctrine\DBAL\Exception\InvalidArgumentException as DBALInvalidArgumentExcep
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use InvalidArgumentException;
 use Monolog\Logger;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\DatabaseMigrations
- */
+#[CoversClass(DatabaseMigrations::class)]
 class DatabaseMigrationsTest extends TestCase
 {
-    /**
-     * @covers ::__construct
-     * @covers ::getMigrationsFilesFromPath
-     */
     public function testThrowsExceptionOnInvalidDirectory(): void
     {
         $this->expectExceptionObject(new InvalidArgumentException('Not a directory: /foo/bar'));
         new DatabaseMigrations($this->createMock(Connection::class), '/foo/bar');
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::migrate
-     * @covers ::getMigrationsFilesFromPath
-     */
     public function testDoesNothingOnEmptyMigrationsDirectory(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -39,9 +29,6 @@ class DatabaseMigrationsTest extends TestCase
         $this->assertSame(0, (new DatabaseMigrations($connection, __DIR__))->migrate());
     }
 
-    /**
-     * @covers ::getCurrentVersion
-     */
     public function testWarningOnMissingMigrationsTable(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -58,10 +45,6 @@ class DatabaseMigrationsTest extends TestCase
         $this->assertSame(0, (new DatabaseMigrations($connection, __DIR__, $logger))->migrate());
     }
 
-    /**
-     * @covers ::migrate
-     * @covers ::getCurrentVersion
-     */
     public function testThrowsExceptionOnDatabaseError(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -79,12 +62,6 @@ class DatabaseMigrationsTest extends TestCase
         $this->assertSame(1, (new DatabaseMigrations($connection, __DIR__, $logger))->migrate());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::migrate
-     * @covers ::getCurrentVersion
-     * @covers ::getMigrationsFilesFromPath
-     */
     public function testCanRunMigrations(): void
     {
         $connection = $this->createConfiguredMock(Connection::class, [
@@ -107,11 +84,6 @@ class DatabaseMigrationsTest extends TestCase
         $this->assertSame(0, (new DatabaseMigrations($connection, __DIR__ . '/fixtures/schemas', $logger))->migrate());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::migrate
-     * @covers ::getCurrentVersion
-     */
     public function testReturnsNonZeroOnErrorDuringMigration(): void
     {
         $connection = $this->createConfiguredMock(Connection::class, [

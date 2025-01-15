@@ -8,6 +8,8 @@ use Doctrine\DBAL\Exception\DriverException;
 use Naisdevice\Jita\FlashMessage;
 use Naisdevice\Jita\Session;
 use Naisdevice\Jita\Session\User;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prometheus\CollectorRegistry;
@@ -17,9 +19,7 @@ use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\Views\Twig;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\Controllers\IndexController
- */
+#[CoversClass(IndexController::class)]
 class IndexControllerTest extends TestCase
 {
     /** @var Request&MockObject */
@@ -85,11 +85,9 @@ class IndexControllerTest extends TestCase
     }
 
     /**
-     * @dataProvider getEmptyGatewayQueryParam
-     * @covers ::index
-     * @covers ::__construct
      * @param array<string,?string> $queryParams
      */
+    #[DataProvider('getEmptyGatewayQueryParam')]
     public function testIndexThrowsExceptionOnMissingGateway(array $queryParams): void
     {
         $this->request
@@ -105,9 +103,6 @@ class IndexControllerTest extends TestCase
         $this->controller->index($this->request, $this->response);
     }
 
-    /**
-     * @covers ::index
-     */
     public function testRedirectsIndexOnMissingUser(): void
     {
         $redirectResponse = $this->createMock(Response::class);
@@ -137,10 +132,6 @@ class IndexControllerTest extends TestCase
         $this->assertSame($redirectResponse, $this->controller->index($this->request, $this->response));
     }
 
-    /**
-     * @covers ::index
-     * @covers ::userHasAccessToGateway
-     */
     public function testCanRenderIndexPage(): void
     {
         $response = $this->createMock(Response::class);
@@ -167,7 +158,7 @@ class IndexControllerTest extends TestCase
         $this->session
             ->expects($this->once())
             ->method('setPostToken')
-            ->with($this->isType('string'));
+            ->with($this->isString());
 
         $result = $this->createMock(Response::class);
 
@@ -225,7 +216,7 @@ class IndexControllerTest extends TestCase
         $this->connection
             ->expects($this->once())
             ->method('fetchAllAssociative')
-            ->with($this->isType('string'), ['user_id' => 'user-object-id'])
+            ->with($this->isString(), ['user_id' => 'user-object-id'])
             ->willReturn([
                 [
                     'id' => 3,
@@ -256,15 +247,12 @@ class IndexControllerTest extends TestCase
         $this->connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with($this->isType('string'), ['user_id' => 'user-object-id', 'gateway' => 'some-gw'])
+            ->with($this->isString(), ['user_id' => 'user-object-id', 'gateway' => 'some-gw'])
             ->willReturn(false);
 
         $this->assertSame($result, $this->controller->index($request, $response));
     }
 
-    /**
-     * @covers ::index
-     */
     public function testIndexThrowsExceptionWhenUnableToFetchAuditLog(): void
     {
         $this->request
@@ -288,9 +276,6 @@ class IndexControllerTest extends TestCase
         $this->controller->index($this->request, $this->response);
     }
 
-    /**
-     * @covers ::createRequest
-     */
     public function testCreateRequestRedirectsWhenThereIsNoUser(): void
     {
         $this->session
@@ -324,9 +309,6 @@ class IndexControllerTest extends TestCase
         $this->assertSame($redirectResponse, $this->controller->createRequest($this->request, $this->response));
     }
 
-    /**
-     * @covers ::createRequest
-     */
     public function testCreateRequestWillRedirectOnError(): void
     {
         $this->session
@@ -369,9 +351,6 @@ class IndexControllerTest extends TestCase
         $this->assertSame($redirectResponse, $this->controller->createRequest($this->request, $this->response));
     }
 
-    /**
-     * @covers ::createRequest
-     */
     public function testFailsToCreateRequestWhenUserAlreadyHasAccessToGateway(): void
     {
         $this->session
@@ -422,15 +401,12 @@ class IndexControllerTest extends TestCase
         $this->connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with($this->isType('string'), ['user_id' => 'user-object-id', 'gateway' => 'some-gw'])
+            ->with($this->isString(), ['user_id' => 'user-object-id', 'gateway' => 'some-gw'])
             ->willReturn(['id' => '1']);
 
         $this->assertSame($redirectResponse, $this->controller->createRequest($this->request, $this->response));
     }
 
-    /**
-     * @covers ::createRequest
-     */
     public function testCreateRequestCanAddDatabaseFailureMessage(): void
     {
         $this->session
@@ -493,15 +469,12 @@ class IndexControllerTest extends TestCase
         $this->connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with($this->isType('string'), ['user_id' => 'user-object-id', 'gateway' => 'some-gw'])
+            ->with($this->isString(), ['user_id' => 'user-object-id', 'gateway' => 'some-gw'])
             ->willReturn(false);
 
         $this->assertSame($redirectResponse, $this->controller->createRequest($this->request, $this->response));
     }
 
-    /**
-     * @covers ::createRequest
-     */
     public function testCreateRequest(): void
     {
         $this->session
@@ -556,7 +529,7 @@ class IndexControllerTest extends TestCase
         $this->connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with($this->isType('string'), ['user_id' => 'user-object-id', 'gateway' => 'some-gw'])
+            ->with($this->isString(), ['user_id' => 'user-object-id', 'gateway' => 'some-gw'])
             ->willReturn(false);
 
         $this->assertSame($redirectResponse, $this->controller->createRequest($this->request, $this->response));

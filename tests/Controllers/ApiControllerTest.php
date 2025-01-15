@@ -3,20 +3,15 @@
 namespace Naisdevice\Jita\Controllers;
 
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\StreamInterface;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\Controllers\ApiController
- */
+#[CoversClass(ApiController::class)]
 class ApiControllerTest extends TestCase
 {
-    /**
-     * @covers ::__construct
-     * @covers ::requests
-     */
     public function testWillRenderRequests(): void
     {
         $connection = $this->createConfiguredMock(Connection::class, [
@@ -65,10 +60,6 @@ class ApiControllerTest extends TestCase
         $this->assertSame($modifiedResponse, $controller->requests($request, $response));
     }
 
-    /**
-     * @covers ::gatewayAccess
-     * @covers ::getAccessRowsWithTtl
-     */
     public function testCanGetGatewayAccess(): void
     {
         $connection = $this->createConfiguredMock(Connection::class, [
@@ -130,10 +121,6 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::gatewaysAccess
-     * @covers ::getAccessRowsWithTtl
-     */
     public function testCanGetGatewaysAccess(): void
     {
         $connection = $this->createConfiguredMock(Connection::class, [
@@ -197,10 +184,6 @@ class ApiControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::userAccess
-     * @covers ::getAccessRowsWithTtl
-     */
     public function testCanGetUserAccess(): void
     {
         $connection = $this->createConfiguredMock(Connection::class, [

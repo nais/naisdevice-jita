@@ -3,11 +3,10 @@
 namespace Naisdevice\Jita;
 
 use Naisdevice\Jita\Session\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\Session
- */
+#[CoversClass(Session::class)]
 class SessionTest extends TestCase
 {
     private Session $session;
@@ -18,10 +17,6 @@ class SessionTest extends TestCase
         $this->session = new Session();
     }
 
-    /**
-     * @covers ::setUser
-     * @covers ::getUser
-     */
     public function testCanSetAndGetUser(): void
     {
         $user = new User('id', 'mail@example.com', 'name', ['id1', 'id2']);
@@ -30,10 +25,6 @@ class SessionTest extends TestCase
         $this->assertSame($user, $this->session->getUser());
     }
 
-    /**
-     * @covers ::setPostToken
-     * @covers ::getPostToken
-     */
     public function testCanSetAndGetPostToken(): void
     {
         $this->assertNull($this->session->getPostToken());
@@ -41,10 +32,6 @@ class SessionTest extends TestCase
         $this->assertSame('token', $this->session->getPostToken());
     }
 
-    /**
-     * @covers ::setGateway
-     * @covers ::getGateway
-     */
     public function testCanSetAndGetGateway(): void
     {
         $this->assertNull($this->session->getGateway());
@@ -52,9 +39,6 @@ class SessionTest extends TestCase
         $this->assertSame('gw', $this->session->getGateway());
     }
 
-    /**
-     * @covers ::hasUser
-     */
     public function testCanCheckIfTheSessionHasAUser(): void
     {
         $this->assertFalse($this->session->hasUser());
