@@ -5,6 +5,9 @@ namespace Naisdevice\Jita;
 use DI\Container;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Tools\DsnParser;
+use Dotenv\Dotenv;
+use Dotenv\Exception\ValidationException;
 use Exception;
 use Naisdevice\Jita\Controllers\ApiController;
 use Naisdevice\Jita\Controllers\IndexController;
@@ -26,10 +29,32 @@ use Twig\Extension\DebugExtension;
 
 require __DIR__ . '/../vendor/autoload.php';
 
+$dotenv = Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->safeLoad();
+
+try {
+    $requiredEnvVars = [
+        'ISSUER_ENTITY_ID',
+        'LOGIN_URL',
+        'LOGOUT_URL',
+        'SAML_CERT',
+        'API_PASSWORD',
+        'DB_URL',
+    ];
+
+    $dotenv->required($requiredEnvVars)->notEmpty();
+} catch (ValidationException $e) {
+    http_response_code(503);
+    echo sprintf('Missing one or more required environment variable(s): %s', join(', ', $requiredEnvVars));
+    exit;
+}
+
 define('DEBUG', '1' === env('DEBUG'));
 
 try {
-    $connection = DriverManager::getConnection(['url' => env('DB_URL')]);
+    $connection = DriverManager::getConnection(
+        (new DsnParser(['postgres' => 'pdo_pgsql']))->parse(env('DB_URL'))
+    );
 } catch (Exception $e) {
     http_response_code(503);
     echo 'Unable to connect to the database';
@@ -135,7 +160,6 @@ $app->add(new HttpBasicAuthentication([
 ]));
 $app->add(TwigMiddleware::createFromContainer($app, Twig::class));
 $app->add(new Middleware\RemoveDuplicateAuthHeader());
-$app->add(new Middleware\EnvironmentValidation(getenv()));
 $app
     ->addErrorMiddleware(DEBUG, true, true)
     ->setDefaultErrorHandler(function (Request $request, Throwable $exception, bool $displayErrorDetails) use ($app) {
