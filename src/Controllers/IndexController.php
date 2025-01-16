@@ -186,7 +186,7 @@ class IndexController
         try {
             $this->collectorRegistry
                 ->getOrRegisterCounter(MetricsController::NS, 'request_counter', 'number of jita requests', ['duration', 'gateway'])
-                ->incBy(1, [$duration, $gateway]);
+                ->incBy(1, [(string) $duration, $gateway]);
 
             $this->connection->insert('requests', [
                 'created' => $now,

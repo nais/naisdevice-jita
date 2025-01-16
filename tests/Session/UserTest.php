@@ -2,20 +2,12 @@
 
 namespace Naisdevice\Jita\Session;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\Session\User
- */
+#[CoversClass(User::class)]
 class UserTest extends TestCase
 {
-    /**
-     * @covers ::__construct
-     * @covers ::getObjectId
-     * @covers ::getEmail
-     * @covers ::getName
-     * @covers ::getGroups
-     */
     public function testCanGetValues(): void
     {
         $user = new User('id', 'user@example.com', 'name', ['id1', 'id2']);

@@ -5,11 +5,11 @@ namespace Naisdevice\Jita;
 /**
  * Get env var as string
  *
- * @param string $key
- * @return string
- * @codeCoverageIgnore
+ * If the variable does not exist an empty string is returned. Leading and trailing whitespace is
+ * automatically stripped from the returned value.
  */
 function env(string $key): string
 {
-    return trim((string) getenv($key));
+    $value = $_ENV[$key] ?? '';
+    return trim((string) $value);
 }

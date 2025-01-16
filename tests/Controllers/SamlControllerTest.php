@@ -5,20 +5,15 @@ namespace Naisdevice\Jita\Controllers;
 use Naisdevice\Jita\SamlResponseValidator;
 use Naisdevice\Jita\Session;
 use Naisdevice\Jita\Session\User;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\StreamInterface;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\Controllers\SamlController
- */
+#[CoversClass(SamlController::class)]
 class SamlControllerTest extends TestCase
 {
-    /**
-     * @covers ::__construct
-     * @covers ::logout
-     */
     public function testCanLogOut(): void
     {
         $session = $this->createMock(Session::class);
@@ -46,9 +41,6 @@ class SamlControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::acs
-     */
     public function testFailsWhenSessionAlreadyExists(): void
     {
         $body = $this->createMock(StreamInterface::class);
@@ -75,9 +67,6 @@ class SamlControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::acs
-     */
     public function testFailsWhenRequestIsMissingSamlResponse(): void
     {
         $body = $this->createMock(StreamInterface::class);
@@ -106,9 +95,6 @@ class SamlControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::acs
-     */
     public function testFailsWhenSamlResponseIsNotCorrectlyEncoded(): void
     {
         $body = $this->createMock(StreamInterface::class);
@@ -139,9 +125,6 @@ class SamlControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::acs
-     */
     public function testFailsWhenSamlResponseIsInvalid(): void
     {
         $body = $this->createMock(StreamInterface::class);
@@ -179,10 +162,6 @@ class SamlControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::acs
-     * @covers ::getUserFromSamlResponse
-     */
     public function testFailsWhenSamlResponseIsMissingObjectId(): void
     {
         $body = $this->createMock(StreamInterface::class);
@@ -213,10 +192,6 @@ class SamlControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::acs
-     * @covers ::getUserFromSamlResponse
-     */
     public function testFailsWhenSamlResponseIsMissingGivenNameObjectId(): void
     {
         $body = $this->createMock(StreamInterface::class);
@@ -247,10 +222,6 @@ class SamlControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::acs
-     * @covers ::getUserFromSamlResponse
-     */
     public function testFailsWhenSamlResponseIsMissingEmailAddress(): void
     {
         $body = $this->createMock(StreamInterface::class);
@@ -281,10 +252,6 @@ class SamlControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::acs
-     * @covers ::getUserFromSamlResponse
-     */
     public function testCanSuccessfullySetUserInSession(): void
     {
         $response2 = $this->createMock(Response::class);
@@ -328,10 +295,6 @@ class SamlControllerTest extends TestCase
         );
     }
 
-    /**
-     * @covers ::acs
-     * @covers ::getUserFromSamlResponse
-     */
     public function testFailsWhenSamlResponseIsNotValid(): void
     {
         $body = $this->createMock(StreamInterface::class);

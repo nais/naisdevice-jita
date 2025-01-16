@@ -2,18 +2,18 @@
 
 namespace Naisdevice\Jita;
 
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\SamlRequest
- */
+#[CoversClass(SamlRequest::class)]
 class SamlRequestTest extends TestCase
 {
     /**
      * @return array<int,array{issuer:string}>
      */
-    public function getSamlRequestParams(): array
+    public static function getSamlRequestParams(): array
     {
         return [
             [
@@ -22,12 +22,7 @@ class SamlRequestTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getSamlRequestParams
-     * @covers ::__construct
-     * @covers ::__toString
-     * @covers ::getId
-     */
+    #[DataProvider('getSamlRequestParams')]
     public function testCanPresentAsString(string $issuer): void
     {
         $samlRequest = new SamlRequest($issuer);

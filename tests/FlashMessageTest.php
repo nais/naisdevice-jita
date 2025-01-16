@@ -2,18 +2,12 @@
 
 namespace Naisdevice\Jita;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\FlashMessage
- */
+#[CoversClass(FlashMessage::class)]
 class FlashMessageTest extends TestCase
 {
-    /**
-     * @covers ::__construct
-     * @covers ::isError
-     * @covers ::getMessage
-     */
     public function testCanGetValues(): void
     {
         $message = new FlashMessage('some message');

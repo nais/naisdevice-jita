@@ -2,19 +2,15 @@
 
 namespace Naisdevice\Jita\Middleware;
 
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-/**
- * @coversDefaultClass Naisdevice\Jita\Middleware\RemoveDuplicateAuthHeader
- */
+#[CoversClass(RemoveDuplicateAuthHeader::class)]
 class RemoveDuplicateAuthHeaderTest extends TestCase
 {
-    /**
-     * @covers ::__invoke
-     */
     public function testCanRemoveDuplicateAuthHeaders(): void
     {
         $response = $this->createMock(ResponseInterface::class);

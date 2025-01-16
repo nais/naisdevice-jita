@@ -48,7 +48,8 @@ spec:
   gcp:
     sqlInstances:
       - name: naisdevice-jita
-        type: POSTGRES_12
+        type: {{ db.version }}
+        tier: {{ db.tier }}
         cascadingDelete: {{ db.cascadingDelete }}
         highAvailability: {{ db.highAvailability }}
         databases:
