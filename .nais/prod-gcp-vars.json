@@ -6,7 +6,7 @@
     "https://naisdevice-jita.external.prod-gcp.nav.cloud.nais.io"
   ],
   "db": {
-    "version": "POSTGRES_12",
+    "version": "POSTGRES_13",
     "tier": "db-custom-1-3840",
     "cascadingDelete": false,
     "highAvailability": true
