@@ -4,6 +4,12 @@ Web application that enables Just in time access to sensitive gateways.
 
 ## Local development
 
+Install tools:
+
+```bash
+mise i
+```
+
 Install dependencies:
 
 ```bash
