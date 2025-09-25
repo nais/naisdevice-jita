@@ -2,55 +2,32 @@ apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
   name: naisdevice-jita
-  namespace: naisdevice
+  namespace: nais
   labels:
-    team: naisdevice
-  annotations:
-    nais.io/read-only-file-system: "false"
+    team: nais
 spec:
   image: {{ image }}
-  port: 8080
+  port: 80
   replicas:
-    min: 2
-    max: 2
-    cpuThresholdPercentage: 50
-  prometheus:
-    enabled: true
-    path: /metrics
+    min: 1
+    max: 4
+    cpuThresholdPercentage: 90
   liveness:
-    path: /isAlive
-    initialDelay: 5
-    periodSeconds: 5
-    failureThreshold: 30
+    path: /
   readiness:
-    path: /isReady
-    initialDelay: 5
-    periodSeconds: 5
-    failureThreshold: 30
+    path: /
   resources:
     limits:
-      memory: 512Mi
+      memory: 32Mi
     requests:
-      cpu: 200m
-      memory: 256Mi
-  env:
-    {{#each env}}
-    - name: {{@key}}
-      value: "{{this}}"
-    {{/each}}
+      cpu: 10m
+      memory: 16Mi
   ingresses:
-  {{#each ingresses as |url|}}
-     - {{url}}
-  {{/each}}
-  envFrom:
-    - secret: naisdevice-jita
-  gcp:
-    sqlInstances:
-      - name: naisdevice-jita
-        type: {{ db.version }}
-        tier: {{ db.tier }}
-        cascadingDelete: {{ db.cascadingDelete }}
-        highAvailability: {{ db.highAvailability }}
-        databases:
-          - name: naisdevice-jita
-            envVarPrefix: DB
+    - https://naisdevice-jita.external.prod-gcp.nav.cloud.nais.io
+  filesFrom:
+    - emptyDir:
+        medium: Disk
+      mountPath: /var/cache/nginx/
+    - emptyDir:
+        medium: Disk
+      mountPath: /var/run/

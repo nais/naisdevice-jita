@@ -1,102 +1,35 @@
-name: Test, build and deploy
+name: Build and deploy
 on: push
 permissions:
   contents: read
   id-token: write
 jobs:
-  test:
-    name: Run unit tests and static analysis
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.3"
-
-      - name: Output some debug information about the PHP version
-        run: |
-          composer --version
-          php -v
-          php -i
-          php -m
-
-      - name: Validate composer files
-        run: composer validate --strict
-
-      - name: Get Composer Cache Directory
-        id: get-composer-cache-dir
-        run: echo "dir=$(composer config cache-files-dir)" >> ${GITHUB_OUTPUT}
-
-      - uses: actions/cache@v4
-        id: composer-cache
-        with:
-          path: ${{ steps.get-composer-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
-
-      - name: Install dependencies
-        run: composer install
-
-      - name: Run unit tests
-        run: vendor/bin/phpunit
-
-      - name: Run static analysis
-        run: vendor/bin/phpstan
-
-      - name: Check coding standard
-        run: vendor/bin/php-cs-fixer check --diff
-
-  build-push:
+  build-and-push:
     name: Build and push image
-    runs-on: ubuntu-24.04
-    needs: test
+    runs-on: ubuntu-latest
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
       telemetry: ${{ steps.docker-build-push.outputs.telemetry }}
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v5
       - uses: nais/docker-build-push@v0
         id: docker-build-push
         with:
-          team: naisdevice
+          team: nais
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-
-  deploy-dev-gcp:
-    name: Deploy to dev-gcp
-    needs:
-      - test
-      - build-push
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: nais/deploy/actions/deploy@v2
-        env:
-          CLUSTER: dev-gcp
-          RESOURCE: .nais/nais.yml
-          VARS: .nais/dev-gcp-vars.json
-          VAR: image=${{ needs.build-push.outputs.image }}
-          TELEMETRY: ${{ needs.build-push.outputs.telemetry }}
 
   deploy-prod-gcp:
     if: ${{ github.ref == 'refs/heads/main' }}
     name: Deploy to prod-gcp
     needs:
-      - test
-      - build-push
-    runs-on: ubuntu-24.04
+      - build-and-push
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v5
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/nais.yml
-          VARS: .nais/prod-gcp-vars.json
           VAR: image=${{ needs.build-push.outputs.image }}
           TELEMETRY: ${{ needs.build-push.outputs.telemetry }}
