@@ -31,5 +31,5 @@ jobs:
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/nais.yml
-          VAR: image=${{ needs.build-push.outputs.image }}
-          TELEMETRY: ${{ needs.build-push.outputs.telemetry }}
+          VAR: image=${{ needs.build-and-push.outputs.image }}
+          TELEMETRY: ${{ needs.build-and-push.outputs.telemetry }}
