@@ -1,8 +1,13 @@
 name: Build and deploy
-on: push
+on:
+  workflow_dispatch:
+  push:
 permissions:
   contents: read
   id-token: write
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build-and-push:
     name: Build and push image
@@ -11,8 +16,8 @@ jobs:
       image: ${{ steps.docker-build-push.outputs.image }}
       telemetry: ${{ steps.docker-build-push.outputs.telemetry }}
     steps:
-      - uses: actions/checkout@v5
-      - uses: nais/docker-build-push@v0
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # ratchet:actions/checkout@v6
+      - uses: nais/docker-build-push@1fae4798c79f4af4c3cdbd3fe65e51f8f3ba2368 # ratchet:nais/docker-build-push@main
         id: docker-build-push
         with:
           team: nais
@@ -26,8 +31,8 @@ jobs:
       - build-and-push
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: nais/deploy/actions/deploy@v2
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # ratchet:actions/checkout@v6
+      - uses: nais/deploy/actions/deploy@56e14061f2a8437bd9119e7b8f92749a3b288db1 # ratchet:nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/nais.yml
