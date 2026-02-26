@@ -1,4 +1,4 @@
-FROM golang:1.25 AS builder
+FROM golang:1.26 AS builder
 WORKDIR /app
 COPY main.go go.mod index.html ./
 RUN CGO_ENABLED=0 go build -o server .
